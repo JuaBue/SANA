@@ -55,14 +55,14 @@
 
 
 /*
- * ------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
  *
  *  \par Overview:
  *  This function print the Log in a file.
  *
  *  \return
  *
- * ------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
  */
 int Logging()
 {
@@ -80,14 +80,14 @@ int Logging()
 
 
 /*
- * ------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
  *
  *  \par Overview:
  *  This function print the Log in a file.
  *
  *  \return
  *
- * ------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
  */
 BOOL Print_LOG (void)
 {
@@ -96,7 +96,7 @@ BOOL Print_LOG (void)
     BOOL           lbCreatePath;
     static char    lsPath[MAX_SCRLINE]= "\0";
     const char    *lsPath2;
-    char    *lcLog;
+    char          *lcLog;
 
 
     /* Initialize output data */
@@ -106,7 +106,7 @@ BOOL Print_LOG (void)
     /* create the path to store the LOGs */
     lsPath2 = Create_Path( (char *)lsPath);
     lbCreatePath = TRUE;
-    printf (lsPath2);
+    printf ("%s", (char *)lsPath2);
     if (lbCreatePath)
     {
         strcat(lsPath, "//");
@@ -124,7 +124,7 @@ BOOL Print_LOG (void)
 
         lcLog = Get_Date (FALSE);
         strcat(lcLog, "\n");
-        fprintf (lfFile, lcLog);
+        fprintf (lfFile, "%s", lcLog);
         fclose (lfFile);
     }
     else
@@ -137,14 +137,14 @@ BOOL Print_LOG (void)
 
 
 /*
- * ------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
  *
  *  \par Overview:
  *  This function print the Log in a file.
  *
  *  \return
  *  TRUE el directorio se ha creado, FALSE el directorio no se ha creado.
- * ------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
  */
 const char *Create_Path (char *lsPath)
 {
@@ -167,7 +167,7 @@ const char *Create_Path (char *lsPath)
         if (NUM_0 == lwpath)
         {
             printf ("CarCreada\n");
-            printf(lsPath);
+            printf("%s", lsPath);
             lbResult = TRUE;
         }
         else
@@ -189,7 +189,7 @@ const char *Create_Path (char *lsPath)
         strcpy(lsPath, lcNamePath);
         strcat(lsPath, "//");
         strcat(lsPath, "borra.txt");
-        printf(lsPath);
+        printf("%s", lsPath);
     }
 
     strcpy(lsPath, lcNamePath);
@@ -199,14 +199,14 @@ const char *Create_Path (char *lsPath)
 
 
 /*
- * ------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
  *
  *  \par Overview:
  *  This function print the Log in a file.
  *
  *  \return
  *
- * ------------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
  */
 char *Get_Date (BOOL SelTime)
 {

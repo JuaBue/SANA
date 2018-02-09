@@ -8,11 +8,14 @@
 #ifndef INCLUDES_TYPES_H_
 #define INCLUDES_TYPES_H_
 
+
 /*
  *------------------------------------------------------------------------------
- * INCLUDE FILES
+ * CONSTANTS
  *------------------------------------------------------------------------------
  */
+// Enable SPI Debug
+#define SPI_DBG
 
 // SPI Configuration commands.
 #define SPI_DATA_MODE    	0x04       	/* CPOL = 0; CPHA = 1 (Datasheet, p8) */
@@ -42,31 +45,27 @@
 #define ADS1299_CONFIG2     0x02		/* Configuration 2 register - Type: R/W */
 #define ADS1299_CONFIG3     0x03		/* Configuration 3 register - Type: R/W */
 #define ADS1299_LOFF        0x04		/* LOFF: Lead-Off Control Register - Type: R/W */
-#define ADS1299_CH1SET      0x05		/* CHnSET: Individual Channel Settings (n = 1 to 8) - Type: R/W */
-#define ADS1299_CH2SET      0x06		/* ID Control register - Type: R*/
-#define ADS1299_CH3SET      0x07		/* ID Control register - Type: R*/
-#define ADS1299_CH4SET      0x08		/* ID Control register - Type: R*/
-#define ADS1299_CH5SET      0x09		/* ID Control register - Type: R*/
-#define ADS1299_CH6SET      0x0A		/* ID Control register - Type: R*/
-#define ADS1299_CH7SET      0x0B		/* ID Control register - Type: R*/
-#define ADS1299_CH8SET      0x0C		/* ID Control register - Type: R*/
-#define ADS1299_BIAS_SENSP  0x0D		/* ID Control register - Type: R*/
-#define ADS1299_BIAS_SENSN  0x0E		/* ID Control register - Type: R*/
-#define ADS1299_LOFF_SENSP  0x0F		/* ID Control register - Type: R*/
-#define ADS1299_LOFF_SENSN  0x10		/* ID Control register - Type: R*/
-#define ADS1299_LOFF_FLIP   0x11		/* ID Control register - Type: R*/
-#define ADS1299_LOFF_STATP  0x12		/* ID Control register - Type: R*/
-#define ADS1299_LOFF_STATN  0x13		/* ID Control register - Type: R*/
-#define ADS1299_GPIO        0x14		/* ID Control register - Type: R*/
-#define ADS1299_MISC1       0x15		/* ID Control register - Type: R*/
-#define ADS1299_MISC2       0x16		/* ID Control register - Type: R*/
-#define ADS1299_CONFIG4     0x17		/* ID Control register - Type: R*/
+#define ADS1299_CH1SET      0x05		/* CH1SET: Individual Channel Settings - Type: R/W */
+#define ADS1299_CH2SET      0x06		/* CH2SET: Individual Channel Settings - Type: R/W */
+#define ADS1299_CH3SET      0x07		/* CH3SET: Individual Channel Settings - Type: R/W */
+#define ADS1299_CH4SET      0x08		/* CH4SET: Individual Channel Settings - Type: R/W */
+#define ADS1299_CH5SET      0x09		/* CH5SET: Individual Channel Settings - Type: R/W */
+#define ADS1299_CH6SET      0x0A		/* CH6SET: Individual Channel Settings - Type: R/W */
+#define ADS1299_CH7SET      0x0B		/* CH7SET: Individual Channel Settings - Type: R/W */
+#define ADS1299_CH8SET      0x0C		/* CH8SET: Individual Channel Settings - Type: R/W */
+#define ADS1299_BIAS_SENSP  0x0D		/* BIAS_SENSP: Bias Drive Positive Derivation Register - Type: R/W */
+#define ADS1299_BIAS_SENSN  0x0E		/* BIAS_SENSN: Bias Drive Negative Derivation Register - Type: R/W */
+#define ADS1299_LOFF_SENSP  0x0F		/* LOFF_SENSP: Positive Signal Lead-Off Detection Register - Type: R/W */
+#define ADS1299_LOFF_SENSN  0x10		/* LOFF_SENSN: Negative Signal Lead-Off Detection Register - Type: R/W */
+#define ADS1299_LOFF_FLIP   0x11		/* LOFF_FLIP: Lead-Off Flip Register - Type: R/W */
+#define ADS1299_LOFF_STATP  0x12		/* LOFF_STATP: Lead-Off Positive Signal Status Register - Type: R/W */
+#define ADS1299_LOFF_STATN  0x13		/* LOFF_STATN: Lead-Off Negative Signal Status Register - Type: R/W */
+#define ADS1299_GPIO        0x14		/* GPIO: General-Purpose I/O Register - Type: R/W */
+#define ADS1299_MISC1       0x15		/* MISC1: Miscellaneous 1 Register - Type: R/W */
+#define ADS1299_MISC2       0x16		/* MISC2: Miscellaneous 2 Register - Type: R/W */
+#define ADS1299_CONFIG4     0x17		/* CONFIG4: Configuration Register 4 - Type: R/W */
 
-/*
- *------------------------------------------------------------------------------
- * CONSTANTS
- *------------------------------------------------------------------------------
- */
+
 
 
 /*
