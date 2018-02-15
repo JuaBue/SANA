@@ -67,7 +67,7 @@ extern unsigned char RX_spi[SPIDEV_BYTES_NUM];
 int main(void)
 {
     int MenuSystem;
-    int i = 0;
+    int i = NUM_0;
 
     //SPI INITIALIZE
     memset(Tx_spi, 0, sizeof(Tx_spi));
@@ -93,6 +93,8 @@ int main(void)
         else
             printf("(Main)spidev1.0: Transaction Failed\r\n");
         usleep(100000);
+        SPIDEV1_single_transfer(0x22);
+        printf("%s", RX_spi);
         printf("%d\r\n", ++i);
     }
 #endif

@@ -49,6 +49,15 @@
 #define NUM_8                   8
 #define NUM_9                   9
 
+#define NEG_1				    -1
+#define NEG_2				    -2
+#define NEG_3				    -3
+#define NEG_4				    -4
+#define NEG_5				    -5
+#define NEG_6				    -6
+#define NEG_7				    -7
+#define NEG_8				    -8
+#define NEG_9				    -9
 
 /*
  *=====================================================
@@ -73,18 +82,18 @@
  * Type File Permitions
  *=====================================================
  */
-#define                 S_IRWXU     (S_IRUSR | S_IWUSR | S_IXUSR)
-#define                 S_IRUSR     0000400 /* read permission, owner */
-#define                 S_IWUSR     0000200 /* write permission, owner */
-#define                 S_IXUSR     0000100/* execute/search permission, owner */
-#define                 S_IRWXG     (S_IRGRP | S_IWGRP | S_IXGRP)
-#define                 S_IRGRP     0000040 /* read permission, group */
-#define                 S_IWGRP     0000020 /* write permission, grougroup */
-#define                 S_IXGRP     0000010/* execute/search permission, group */
-#define                 S_IRWXO     (S_IROTH | S_IWOTH | S_IXOTH)
-#define                 S_IROTH     0000004 /* read permission, other */
-#define                 S_IWOTH     0000002 /* write permission, other */
-#define                 S_IXOTH     0000001/* execute/search permission, other */
+//#define                 S_IRWXU     (S_IRUSR | S_IWUSR | S_IXUSR)
+//#define                 S_IRUSR     0000400 /* read permission, owner */
+//#define                 S_IWUSR     0000200 /* write permission, owner */
+//#define                 S_IXUSR     0000100/* execute/search permission, owner */
+//#define                 S_IRWXG     (S_IRGRP | S_IWGRP | S_IXGRP)
+//#define                 S_IRGRP     0000040 /* read permission, group */
+//#define                 S_IWGRP     0000020 /* write permission, grougroup */
+//#define                 S_IXGRP     0000010/* execute/search permission, group */
+//#define                 S_IRWXO     (S_IROTH | S_IWOTH | S_IXOTH)
+//#define                 S_IROTH     0000004 /* read permission, other */
+//#define                 S_IWOTH     0000002 /* write permission, other */
+//#define                 S_IXOTH     0000001/* execute/search permission, other */
 
 
 /*

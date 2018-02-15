@@ -66,6 +66,9 @@
 #define ADS1299_CONFIG4     0x17		/* CONFIG4: Configuration Register 4 - Type: R/W */
 
 
+//Returns values
+#define ERROR_RET			-1
+#define NO_ERROR_RET        0
 
 
 /*
