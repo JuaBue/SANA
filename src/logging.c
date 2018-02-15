@@ -14,10 +14,7 @@
  *------------------------------------------------------------------------------
  */
 #include <include.h>
-#include <sys/stat.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <logging.h>
+
 
 /*
  *------------------------------------------------------------------------------
@@ -97,7 +94,8 @@ BOOL Print_LOG (void)
     static char    lsPath[MAX_SCRLINE]= "\0";
     const char    *lsPath2;
     char          *lcLog;
-
+    extern unsigned char RX_spi[SPIDEV_BYTES_NUM];
+    char 			RxSPi;
 
     /* Initialize output data */
     lbResult     = FALSE;
@@ -106,11 +104,10 @@ BOOL Print_LOG (void)
     /* create the path to store the LOGs */
     lsPath2 = Create_Path( (char *)lsPath);
     lbCreatePath = TRUE;
-    printf ("%s", (char *)lsPath2);
     if (lbCreatePath)
     {
         strcat(lsPath, "//");
-        strcat(lsPath, "borra.txt");
+        strcat(lsPath, "LOGs.txt");
         lfFile = fopen (lsPath, "aw+");
 
         if (lfFile==NULL)
@@ -120,12 +117,16 @@ BOOL Print_LOG (void)
         else
         {
             printf("\nArchivo creado :). \n\n");
+			lcLog = Get_Date (FALSE);
+			strcat(lcLog, "\n");
+			fprintf (lfFile, "%s", lcLog);
+//			RxSPi = (char) RX_spi[1];
+//			printf("%s\n", RxSPi);
+//			strcat(RxSPi, "\n");
+//			fprintf (lfFile, "%s", RxSPi);
+//			fprintf (lfFile, "\n");
+			fclose (lfFile);
         }
-
-        lcLog = Get_Date (FALSE);
-        strcat(lcLog, "\n");
-        fprintf (lfFile, "%s", lcLog);
-        fclose (lfFile);
     }
     else
     {
@@ -166,8 +167,6 @@ const char *Create_Path (char *lsPath)
 
         if (NUM_0 == lwpath)
         {
-            printf ("CarCreada\n");
-            printf("%s", lsPath);
             lbResult = TRUE;
         }
         else
@@ -180,7 +179,6 @@ const char *Create_Path (char *lsPath)
     else
     {
         /* The path already exist */
-        printf ("CarExiste\n");
         lbResult = TRUE;
     }
 
@@ -188,8 +186,8 @@ const char *Create_Path (char *lsPath)
     {
         strcpy(lsPath, lcNamePath);
         strcat(lsPath, "//");
-        strcat(lsPath, "borra.txt");
-        printf("%s", lsPath);
+        strcat(lsPath, "LOGs.txt");
+        //printf("%s", lsPath);
     }
 
     strcpy(lsPath, lcNamePath);

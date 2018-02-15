@@ -80,5 +80,8 @@
 typedef enum BOOL {FALSE = 0, TRUE = 1} BOOL;
 #endif
 
+#ifndef NULL
+#define NULL (void *)0
+#endif
 
 #endif /* INCLUDES_TYPES_H_ */

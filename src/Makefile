@@ -3,7 +3,7 @@ CC=arm-linux-gnueabihf-g++ -g
 #CC=gcc -g
 
 #CFLAGS=-c -Wall --sysroot=/usr/local/carlson-minot/crosscompilers/arm-none-linux-gnueabi/libc-2013.11-33-sysroot
-CFLAGS=-c -Wall
+CFLAGS=-Wall
 #CFLAGS=-c -Wall
 
 SOURCES=qmain.c logging.c SPI.c
@@ -13,20 +13,18 @@ OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=SPI
  
  
-all: $(SOURCES) $(EXECUTABLE)
- 
-$(EXECUTABLE): $(OBJECTS) -I=$(LIBS)
-    $(CC) $(SOURCES) -I=$(LIBS) $< -o $@
+all:
+	$(CC) $(CFLAGS) $(SOURCES) -I$(LIBS) -o $(EXECUTABLE)
     
-qmain.o:
-    $(CC) $(CFLAGS) -I=$(INCDIR) $< -o $@
+qmain.o: qmain.c
+	$(CC) $(CFLAGS) -I$(LIBS) $< -o $@
     
-logging.o:
-    $(CC) $(CFLAGS) -I=$(INCDIR) $< -o $@
+logging.o: logging.c
+	$(CC) $(CFLAGS) -I$(LIBS) $< -o $@
     
-SPI.o:
-    $(CC) $(CFLAGS) -I=$(INCDIR) $< -o $@
+SPI.o: SPI.c
+	$(CC) $(CFLAGS) -I$(LIBS) $< -o $@
  
 clean:
-    rm -rf *.o $(EXECUTABLE)
+	rm -rf *.o $(EXECUTABLE)
 

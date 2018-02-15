@@ -13,10 +13,7 @@
  * INCLUDE FILES
  *------------------------------------------------------------------------------
  */
-//#include <include.h>
 #include <include.h>
-#include <logging.h>
-#include <SPI.h>
 
 
 /*
@@ -24,9 +21,6 @@
  * CONSTANTS
  *------------------------------------------------------------------------------
  */
-#ifndef NULL
-#define NULL (void *)0
-#endif
 
 
 /*
@@ -94,9 +88,9 @@ int main(void)
             printf("(Main)spidev1.0: Transaction Failed\r\n");
         usleep(100000);
         SPIDEV1_single_transfer(0x22);
-        printf("%s", RX_spi);
+        printf("%s\n", RX_spi);
         printf("%d\r\n", ++i);
-    }
+
 #endif
 
     /* Initialize local variable */
@@ -115,7 +109,7 @@ int main(void)
     {
         /* do nothing */
     }
-
+    }
     return NUM_1;
 }
 
