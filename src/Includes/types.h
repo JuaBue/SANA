@@ -17,6 +17,24 @@
 // Enable SPI Debug
 #define SPI_DBG
 
+// SPI Generic Definitions
+#define SPIDEV_BYTES_NUM                 8
+#define SPIDEV_DATA_BITS_NUM             8
+#define SPIDEV_DELAY_US                  0
+#define SPI_SS_HIGH                      1
+#define SPI_SS_LOW                       0
+#define SPI_ONE_BYTE                     1
+
+//SPI No. of bytes per transaction
+#define NO_OF_BYTES                      2
+
+// SPI BBB Definitions specific to spidev
+#define SPIDEV0_PATH                     "/dev/spidev0.1"
+#define SPIDEV0_BUS_SPEED_HZ             50000
+#define SPIDEV1_PATH                     "/dev/spidev1.0"
+#define SPIDEV1_BUS_SPEED_HZ             50000
+
+
 // SPI Configuration commands.
 #define SPI_DATA_MODE    	0x04       	/* CPOL = 0; CPHA = 1 (Datasheet, p8) */
 #define SPI_MODE_MASK    	0x0C       	/* mask of CPOL and CPHA  on SPCR */
@@ -83,5 +101,25 @@ typedef enum BOOL {FALSE = 0, TRUE = 1} BOOL;
 #ifndef NULL
 #define NULL (void *)0
 #endif
+
+/* Enum SPI Modes*/
+typedef enum{
+    SPI_MODE0 = 0,
+    SPI_MODE1 = 1,
+    SPI_MODE2 = 2,
+    SPI_MODE3 = 3
+}SPI_MODE;
+
+/*SPI device configuration structure*/
+typedef struct{
+    char*             spi_dev_path;
+    int               fd_spi;
+    unsigned long     spi_bytes_num;
+    unsigned long     spi_bus_speedHZ;
+    unsigned char     ss_change;
+    unsigned short    spi_delay_us;
+    unsigned char     spi_data_bits_No;
+    unsigned char     spi_mode;
+}SPI_DeviceT, *SPI_DevicePtr;
 
 #endif /* INCLUDES_TYPES_H_ */

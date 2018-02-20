@@ -8,46 +8,6 @@
 #ifndef SPI_H_
 #define SPI_H_
 
-#include<stdint.h>
-
-/* Generic Definitions */
-#define SPIDEV_BYTES_NUM                 8
-#define SPIDEV_DATA_BITS_NUM             8
-#define SPIDEV_DELAY_US                  0
-#define SPI_SS_HIGH                      1
-#define SPI_SS_LOW                       0
-#define SPI_ONE_BYTE                     1
-
-/* No. of bytes per transaction */
-#define NO_OF_BYTES                      2
-
-/*Definitions specific to spidev */
-#define SPIDEV0_PATH                     "/dev/spidev0.1"
-#define SPIDEV0_BUS_SPEED_HZ             50000
-#define SPIDEV1_PATH                     "/dev/spidev1.0"
-#define SPIDEV1_BUS_SPEED_HZ             50000
-
-
-
-/* Enum SPI Modes*/
-typedef enum{
-    SPI_MODE0 = 0,
-    SPI_MODE1 = 1,
-    SPI_MODE2 = 2,
-    SPI_MODE3 = 3
-}SPI_MODE;
-
-/*SPI device configuration structure*/
-typedef struct{
-    char*             spi_dev_path;
-    int               fd_spi;
-    unsigned long     spi_bytes_num;
-    unsigned long     spi_bus_speedHZ;
-    unsigned char     ss_change;
-    unsigned short    spi_delay_us;
-    unsigned char     spi_data_bits_No;
-    unsigned char     spi_mode;
-}SPI_DeviceT, *SPI_DevicePtr;
 
 /* SPI API's*/
 extern int Open_device(char *spi_dev_path, int *fd);

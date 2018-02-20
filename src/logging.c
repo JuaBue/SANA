@@ -92,17 +92,14 @@ BOOL Print_LOG (void)
     FILE           *lfFile;
     BOOL           lbCreatePath;
     static char    lsPath[MAX_SCRLINE]= "\0";
-    const char    *lsPath2;
     char          *lcLog;
-    extern unsigned char RX_spi[SPIDEV_BYTES_NUM];
-    char 			RxSPi;
 
     /* Initialize output data */
     lbResult     = FALSE;
     lbCreatePath = FALSE;
 
     /* create the path to store the LOGs */
-    lsPath2 = Create_Path( (char *)lsPath);
+    Create_Path( (char *)lsPath);
     lbCreatePath = TRUE;
     if (lbCreatePath)
     {
@@ -120,11 +117,6 @@ BOOL Print_LOG (void)
 			lcLog = Get_Date (FALSE);
 			strcat(lcLog, "\n");
 			fprintf (lfFile, "%s", lcLog);
-//			RxSPi = (char) RX_spi[1];
-//			printf("%s\n", RxSPi);
-//			strcat(RxSPi, "\n");
-//			fprintf (lfFile, "%s", RxSPi);
-//			fprintf (lfFile, "\n");
 			fclose (lfFile);
         }
     }
