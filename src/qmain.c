@@ -83,9 +83,7 @@ int main(void)
         printf("(Main)spidev1.0 initialized - READY\r\n");
     }
 
-#ifdef SPI_DBG
     while (1)
-
     {
         if (SPIDEV1_transfer(Tx_spi, RX_spi, NO_OF_BYTES) == NUM_0)
             printf("(Main)spidev1.0: Transaction Complete\r\n");
@@ -94,26 +92,22 @@ int main(void)
             printf("(Main)spidev1.0: Transaction Failed\r\n");
 
         usleep(50000);
-        SPIDEV1_single_transfer(0x22);
-        printf("%s\n", RX_spi);
+        printf("Valor recibido: %lu\n", (unsigned long)RX_spi[0]);
         printf("%d\r\n", ++lIndex);
 
-#endif
+		/* Initialize local variable */
+		MenuSystem = MIN_INT;
+		/* Call to the init function */
+		MenuSystem = InitSystem();
 
-    /* Initialize local variable */
-    MenuSystem = MIN_INT;
-
-    /* Call to the init function */
-    MenuSystem = InitSystem();
-
-    if (NUM_1 == MenuSystem)
-    {
-            (void)Print_LOG();
-    }
-    else
-    {
-        /* do nothing */
-    }
+		if (NUM_1 == MenuSystem)
+		{
+				(void)Print_LOG((unsigned int)RX_spi[0]);
+		}
+		else
+		{
+			/* do nothing */
+		}
     }
     return NUM_1;
 }

@@ -14,9 +14,6 @@
  * CONSTANTS
  *------------------------------------------------------------------------------
  */
-// Enable SPI Debug
-#define SPI_DBG
-
 // SPI Generic Definitions
 #define SPIDEV_BYTES_NUM                 8
 #define SPIDEV_DATA_BITS_NUM             8

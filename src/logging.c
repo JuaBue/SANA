@@ -86,13 +86,13 @@ int Logging()
  *
  * -----------------------------------------------------------------------------
  */
-BOOL Print_LOG (void)
+BOOL Print_LOG (unsigned int lDato)
 {
     BOOL           lbResult;
     FILE           *lfFile;
     BOOL           lbCreatePath;
-    static char    lsPath[MAX_SCRLINE]= "\0";
-    char          *lcLog;
+    static char    lsPath[MAX_SCRLINE] = "\0";
+    static char    lsLog[MAX_SCRLINE] = "\0";
 
     /* Initialize output data */
     lbResult     = FALSE;
@@ -113,10 +113,11 @@ BOOL Print_LOG (void)
         }
         else
         {
-            printf("\nArchivo creado :). \n\n");
-			lcLog = Get_Date (FALSE);
-			strcat(lcLog, "\n");
-			fprintf (lfFile, "%s", lcLog);
+        	//strcat(lsLog, Get_TimeStamp());
+        	sprintf(lsLog, "%s [ADS1299-%d]:\t %d\n",Get_TimeStamp(), ADS_ID,
+        			lDato);
+			//strcat(lsLog, "\n");
+			fprintf (lfFile, "%s", lsLog);
 			fclose (lfFile);
         }
     }
@@ -179,7 +180,7 @@ const char *Create_Path (char *lsPath)
         strcpy(lsPath, lcNamePath);
         strcat(lsPath, "//");
         strcat(lsPath, "LOGs.txt");
-        //printf("%s", lsPath);
+        printf("%s", lsPath);
     }
 
     strcpy(lsPath, lcNamePath);
@@ -205,15 +206,13 @@ char *Get_Date (BOOL SelTime)
     static char FormatT[MAX_SCRLINE];
 
     /* Initialize output data */
-
-
     t = time (NULL);
     tm = localtime(&t);
 
     /* get the time to log the events */
     if (TRUE == SelTime)
     {
-        sprintf(FormatT, "%02d%02d%02d", (tm->tm_year - 100), tm->tm_mon, tm->tm_mday);
+        sprintf(FormatT, "%02d%02d%02d", (tm->tm_year - 100), (tm->tm_mon + 1), tm->tm_mday);
     }
     else
     {
@@ -221,4 +220,32 @@ char *Get_Date (BOOL SelTime)
     }
 
     return FormatT;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ *
+ *  \par Overview:
+ *  This function print the Log in a file.
+ *
+ *  \return
+ *
+ * -----------------------------------------------------------------------------
+ */
+char *Get_TimeStamp (void)
+{
+    time_t t;
+    struct tm *tm;
+    static char TimeStamp[MAX_SCRLINE];
+
+    /* Initialize output data */
+    t = time (NULL);
+    tm = localtime(&t);
+
+    /* get the time to log the events */
+    sprintf(TimeStamp, "%02d%02d%02d\t%02d:%02d:%02d\t", (tm->tm_year - 100),
+    		(tm->tm_mon + 1), tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+
+    return TimeStamp;
 }

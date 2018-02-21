@@ -59,6 +59,8 @@
 #define NEG_8				    -8
 #define NEG_9				    -9
 
+#define ADS_ID					1
+
 /*
  *=====================================================
  * Numeric constants

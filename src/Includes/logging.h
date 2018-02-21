@@ -45,9 +45,10 @@
  *------------------------------------------------------------------------------
  */
 int Logging(void);
-BOOL Print_LOG(void);
+BOOL Print_LOG(unsigned int lDato);
 const char * Create_Path(char *lsPath);
 char * Get_Date (BOOL time);
+char * Get_TimeStamp (void);
 
 #endif /* LOGGING_H_ */
 
