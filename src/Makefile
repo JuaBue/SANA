@@ -3,10 +3,10 @@ CC=arm-linux-gnueabihf-g++ -g
 #CC=gcc -g
 
 #CFLAGS=-c -Wall --sysroot=/usr/local/carlson-minot/crosscompilers/arm-none-linux-gnueabi/libc-2013.11-33-sysroot
-CFLAGS=-Wall
+CFLAGS=-Wall -pthread
 #CFLAGS=-c -Wall
 
-SOURCES=qmain.c logging.c SPI.c
+SOURCES=qmain.c logging.c SPI.c ads1299.c
 INCDIR=
 LIBS=Includes
 OBJECTS=$(SOURCES:.c=.o)

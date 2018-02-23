@@ -83,7 +83,7 @@ int Logging()
  *  This function print the Log in a file.
  *
  *  \return
- *
+ *	FALSE if the log has not been logged. TRUE if the message has been logged.
  * -----------------------------------------------------------------------------
  */
 BOOL Print_LOG (unsigned int lDato)
@@ -119,6 +119,7 @@ BOOL Print_LOG (unsigned int lDato)
 			//strcat(lsLog, "\n");
 			fprintf (lfFile, "%s", lsLog);
 			fclose (lfFile);
+			lbResult = TRUE;
         }
     }
     else
@@ -137,7 +138,7 @@ BOOL Print_LOG (unsigned int lDato)
  *  This function print the Log in a file.
  *
  *  \return
- *  TRUE el directorio se ha creado, FALSE el directorio no se ha creado.
+ *  TRUE the path has been created, FALSE the path has not been created.
  * -----------------------------------------------------------------------------
  */
 const char *Create_Path (char *lsPath)
@@ -178,9 +179,9 @@ const char *Create_Path (char *lsPath)
     if (TRUE == lbResult)
     {
         strcpy(lsPath, lcNamePath);
-        strcat(lsPath, "//");
-        strcat(lsPath, "LOGs.txt");
-        printf("%s", lsPath);
+        strcat(lsPath, "//LOGs.txt");
+        //strcat(lsPath, "LOGs.txt");
+        //printf("%s", lsPath);
     }
 
     strcpy(lsPath, lcNamePath);
