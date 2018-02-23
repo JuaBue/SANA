@@ -9,6 +9,7 @@
 #define ADS1299_H_
 
 BOOL Init_ads1299 (void);
-BOOL SendByte_ads1299 (unsigned char Transfer);
+BOOL SendCommad_ads1299 (unsigned char Command);
+BOOL SendByte_ads1299 (unsigned char Address, unsigned char Transfer);
 
 #endif /* ADS1299_H_ */

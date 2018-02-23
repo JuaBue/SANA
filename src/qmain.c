@@ -131,7 +131,7 @@ int main(void)
         Init_ads1299();
 
         Set_Data.Id_Message = NUM_1;
-        Set_Data.Data_SPI = RX_spi[0];//RX_spi[0];
+        Set_Data.Data_SPI = RX_spi[1];//RX_spi[0];
         msgsnd (msqid,&Set_Data,sizeof(int),IPC_NOWAIT);
         printf("Valor recibido: %lu\n", (unsigned long)RX_spi[0]);
         printf("Num. Transaccion: %d\r\n", ++lIndex);

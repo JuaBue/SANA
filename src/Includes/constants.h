@@ -145,6 +145,32 @@
 #define ADS1299_MISC2       0x16		/* MISC2: Miscellaneous 2 Register - Type: R/W */
 #define ADS1299_CONFIG4     0x17		/* CONFIG4: Configuration Register 4 - Type: R/W */
 
+//Constants for Individual Channel Settings
+#define ICS_TEST_SIGNAL		0x05
+#define ICS_CI_BIAS_DRN		0x07
+#define ICS_SRB2_OPEN		0x00
+#define ICS_SRB2_CLOSE		0x08
+#define ICS_NOT_PGAGAIN		0x70
+
+//Constants for Bias Drive Positive Derivation Register
+#define SENSP_IN1P 			0x01
+#define SENSP_IN2P 			0x02
+#define SENSP_IN3P 			0x04
+#define SENSP_IN4P 			0x08
+#define SENSP_IN5P 			0x10
+#define SENSP_IN6P 			0x20
+#define SENSP_IN7P 			0x40
+#define SENSP_IN8P 			0x80
+
+//Constants for CONFIG3: Configuration Register 3
+#define CONFIG3_BIAS_STAT   	0x01
+#define CONFIG3_BIAS_LOFF_SENS  0x02
+#define CONFIG3_PD_BIAS		   	0x04
+#define CONFIG3_BIASREF_INT   	0x08
+#define CONFIG3_BIAS_MEAS   	0x10
+#define CONFIG3_RESERVED	   	0x60
+#define CONFIG3_PD_REFBUF   	0x80
+
 
 //Returns values
 #define ERROR_RET			-1

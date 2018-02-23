@@ -44,16 +44,17 @@ extern unsigned char RX_spi[SPIDEV_BYTES_NUM];
  */
 BOOL Init_ads1299 (void)
 {
-    BOOL           lbResult;
+    BOOL    lbResult;
+    int 	lwConfigReg;
 
     /* Initialize output data */
-    lbResult     = TRUE;
-
+    lbResult    = TRUE;
+    lwConfigReg = NUM_0;
 
     //=====================================================
     // Send RESET command to default all registers
     //=====================================================
-    SendByte_ads1299(ADS1299_RESET);
+    SendCommad_ads1299(ADS1299_RESET);
 
     // wait 18 tCLK cycles to decode and execute the command.
     usleep(20);
@@ -62,9 +63,81 @@ BOOL Init_ads1299 (void)
     //=====================================================
     //Exit Read Data Continuous mode to communicate with ADS.
     //=====================================================
-    SendByte_ads1299(ADS1299_SDATAC);
+    SendCommad_ads1299(ADS1299_SDATAC);
 
     // wait 4 tCLK cycles to decode and execute the command.
+    usleep(5);
+
+    //=====================================================
+    //ICS. Individual Channel Settings for test_signal
+    //=====================================================
+    // Config the Individual Channel Settings Register with:
+    // ICS_NOT_PGAGAIN = Do not use PGA gain
+    // ICS_SRB2_OPEN   = SRB2 connection open.
+    // ICS_TEST_SIGNAL = Test signal as Channel input.
+    lwConfigReg = (ICS_NOT_PGAGAIN | ICS_SRB2_OPEN | ICS_TEST_SIGNAL);
+
+    SendByte_ads1299(ADS1299_CH1SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH2SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH3SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH4SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH5SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH6SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH7SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH8SET, lwConfigReg);
+
+    usleep(5);
+
+    //=====================================================
+    //ICS. Individual Channel Settings for signal_positiv
+    //=====================================================
+    // Config the Individual Channel Settings Register with:
+    // ICS_NOT_PGAGAIN = Do not use PGA gain
+    // ICS_SRB2_OPEN   = SRB2 connection open.
+    // ICS_CI_BIAS_DRN = BIAS_DRN (negative electrode is the driver)
+    lwConfigReg = (ICS_NOT_PGAGAIN | ICS_SRB2_OPEN | ICS_CI_BIAS_DRN);
+
+    SendByte_ads1299(ADS1299_CH1SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH2SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH3SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH4SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH5SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH6SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH7SET, lwConfigReg);
+    SendByte_ads1299(ADS1299_CH8SET, lwConfigReg);
+
+    usleep(5);
+
+    //=====================================================
+    //BIAS_SENSP: Bias Drive Positive Derivation Register
+    //=====================================================
+    // Config the Individual Channel Settings Register with:
+    // SENSP_IN1P : SENSP_IN8P = Enable Route channel positive
+    // 				signal into BIAS channel
+    lwConfigReg = (SENSP_IN1P | SENSP_IN2P | SENSP_IN3P | SENSP_IN4P |
+    		SENSP_IN5P | SENSP_IN6P | SENSP_IN7P | SENSP_IN8P);
+
+    SendByte_ads1299(ADS1299_BIAS_SENSN, lwConfigReg);
+
+    usleep(5);
+
+    //=====================================================
+    //CONFIG3: Bias Drive Positive Derivation Register
+    //=====================================================
+    // Config the Individual Channel Settings Register with:
+    // CONFIG3_BIAS_STAT      = BIAS lead-off status not connected.
+    // CONFIG3_BIAS_LOFF_SENS = BIAS sense function enabled.
+    // CONFIG3_PD_BIAS        = BIAS buffer power enabled.
+    // CONFIG3_BIASREF_INT    = BIASREF signal (AVDD + AVSS) / 2 internally
+    // CONFIG3_BIAS_MEAS      = This bit enables BIAS measurement.
+    // CONFIG3_PD_REFBUF      = Enable the power-down reference buffer.
+
+    lwConfigReg = (CONFIG3_BIAS_STAT | CONFIG3_BIAS_LOFF_SENS | CONFIG3_PD_BIAS
+    		| CONFIG3_BIASREF_INT | CONFIG3_BIAS_MEAS | CONFIG3_RESERVED |
+			CONFIG3_PD_REFBUF);
+
+    SendByte_ads1299(ADS1299_CONFIG3, lwConfigReg);
+
     usleep(5);
 
     return lbResult;
@@ -80,7 +153,7 @@ BOOL Init_ads1299 (void)
  *	FALSE if the byte has not been send. TRUE if the message has been send.
  * -----------------------------------------------------------------------------
  */
-BOOL SendByte_ads1299 (unsigned char Transfer)
+BOOL SendCommad_ads1299 (unsigned char Command)
 {
     BOOL           lbResult;
 
@@ -91,7 +164,41 @@ BOOL SendByte_ads1299 (unsigned char Transfer)
     memset(Tx_spi, 0, sizeof(Tx_spi));
     memset(RX_spi, 0, sizeof(RX_spi));
 
-    Tx_spi[0] = Transfer;
+    Tx_spi[0] = Command;
+
+    if (SPIDEV1_transfer(Tx_spi, RX_spi, NO_OF_BYTES) == ERROR_RET)
+    {
+        perror("ERROR to reset the ads1299.\n");
+        lbResult = FALSE;
+    }
+
+    return lbResult;
+}
+
+
+/*
+ * -----------------------------------------------------------------------------
+ *
+ *  \par Overview:
+ *  This function send a byte to the device ADS1299.
+ *
+ *  \return
+ *	FALSE if the byte has not been send. TRUE if the message has been send.
+ * -----------------------------------------------------------------------------
+ */
+BOOL SendByte_ads1299 (unsigned char Address, unsigned char Transfer)
+{
+    BOOL           lbResult;
+
+    /* Initialize output data */
+    lbResult     = TRUE;
+
+    //Reset values of the transfer.
+    memset(Tx_spi, 0, sizeof(Tx_spi));
+    memset(RX_spi, 0, sizeof(RX_spi));
+
+    Tx_spi[0] = Address;
+    Tx_spi[1] = Transfer;
 
     if (SPIDEV1_transfer(Tx_spi, RX_spi, NO_OF_BYTES) == ERROR_RET)
     {
