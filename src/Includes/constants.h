@@ -146,30 +146,30 @@
 #define ADS1299_CONFIG4     0x17		/* CONFIG4: Configuration Register 4 - Type: R/W */
 
 //Constants for Individual Channel Settings
-#define ICS_TEST_SIGNAL		0x05
-#define ICS_CI_BIAS_DRN		0x07
-#define ICS_SRB2_OPEN		0x00
-#define ICS_SRB2_CLOSE		0x08
-#define ICS_NOT_PGAGAIN		0x70
+#define ICS_TEST_SIGNAL		0x05		/* Test signal as Channel input. */
+#define ICS_CI_BIAS_DRN		0x07		/* BIAS_DRN (negative electrode is the driver) */
+#define ICS_SRB2_OPEN		0x00		/* SRB2 connection open */
+#define ICS_SRB2_CLOSE		0x08		/* SRB2 connection close */
+#define ICS_NOT_PGAGAIN		0x70		/* Do not use PGA gain */
 
 //Constants for Bias Drive Positive Derivation Register
-#define SENSP_IN1P 			0x01
-#define SENSP_IN2P 			0x02
-#define SENSP_IN3P 			0x04
-#define SENSP_IN4P 			0x08
-#define SENSP_IN5P 			0x10
-#define SENSP_IN6P 			0x20
-#define SENSP_IN7P 			0x40
-#define SENSP_IN8P 			0x80
+#define SENSP_IN1P 			0x01		/* Enable Route channel 1 positive signal into BIAS channel*/
+#define SENSP_IN2P 			0x02		/* Enable Route channel 2 positive signal into BIAS channel */
+#define SENSP_IN3P 			0x04		/* Enable Route channel 3 positive signal into BIAS channel */
+#define SENSP_IN4P 			0x08		/* Enable Route channel 4 positive signal into BIAS channel */
+#define SENSP_IN5P 			0x10		/* Enable Route channel 5 positive signal into BIAS channel */
+#define SENSP_IN6P 			0x20		/* Enable Route channel 6 positive signal into BIAS channel */
+#define SENSP_IN7P 			0x40		/* Enable Route channel 7 positive signal into BIAS channel */
+#define SENSP_IN8P 			0x80		/* Enable Route channel 8 positive signal into BIAS channel */
 
 //Constants for CONFIG3: Configuration Register 3
-#define CONFIG3_BIAS_STAT   	0x01
-#define CONFIG3_BIAS_LOFF_SENS  0x02
-#define CONFIG3_PD_BIAS		   	0x04
-#define CONFIG3_BIASREF_INT   	0x08
-#define CONFIG3_BIAS_MEAS   	0x10
-#define CONFIG3_RESERVED	   	0x60
-#define CONFIG3_PD_REFBUF   	0x80
+#define CONFIG3_BIAS_STAT   	0x01	/* BIAS lead-off status not connected. */
+#define CONFIG3_BIAS_LOFF_SENS  0x02	/* BIAS sense function enabled. */
+#define CONFIG3_PD_BIAS		   	0x04 	/* BIAS buffer power enabled. */
+#define CONFIG3_BIASREF_INT   	0x08    /* BIASREF signal (AVDD + AVSS) / 2 internally */
+#define CONFIG3_BIAS_MEAS   	0x10	/* This bit enables BIAS measurement. */
+#define CONFIG3_RESERVED	   	0x60	/* bits 6 and 7 always to 1. */
+#define CONFIG3_PD_REFBUF   	0x80	/* Enable the power-down reference buffer. */
 
 
 //Returns values

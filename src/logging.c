@@ -125,6 +125,7 @@ BOOL Print_LOG (unsigned int lDato)
     else
     {
         printf("\nError de fichero :). \n\n");
+        /* TODO: tracear un error */
     }
 
     return lbResult;

@@ -88,25 +88,25 @@ BOOL Init_ads1299 (void)
 
     usleep(5);
 
-    //=====================================================
-    //ICS. Individual Channel Settings for signal_positiv
-    //=====================================================
-    // Config the Individual Channel Settings Register with:
-    // ICS_NOT_PGAGAIN = Do not use PGA gain
-    // ICS_SRB2_OPEN   = SRB2 connection open.
-    // ICS_CI_BIAS_DRN = BIAS_DRN (negative electrode is the driver)
-    lwConfigReg = (ICS_NOT_PGAGAIN | ICS_SRB2_OPEN | ICS_CI_BIAS_DRN);
-
-    SendByte_ads1299(ADS1299_CH1SET, lwConfigReg);
-    SendByte_ads1299(ADS1299_CH2SET, lwConfigReg);
-    SendByte_ads1299(ADS1299_CH3SET, lwConfigReg);
-    SendByte_ads1299(ADS1299_CH4SET, lwConfigReg);
-    SendByte_ads1299(ADS1299_CH5SET, lwConfigReg);
-    SendByte_ads1299(ADS1299_CH6SET, lwConfigReg);
-    SendByte_ads1299(ADS1299_CH7SET, lwConfigReg);
-    SendByte_ads1299(ADS1299_CH8SET, lwConfigReg);
-
-    usleep(5);
+//    //=====================================================
+//    //ICS. Individual Channel Settings for signal_positiv
+//    //=====================================================
+//    // Config the Individual Channel Settings Register with:
+//    // ICS_NOT_PGAGAIN = Do not use PGA gain
+//    // ICS_SRB2_OPEN   = SRB2 connection open.
+//    // ICS_CI_BIAS_DRN = BIAS_DRN (negative electrode is the driver)
+//    lwConfigReg = (ICS_NOT_PGAGAIN | ICS_SRB2_OPEN | ICS_CI_BIAS_DRN);
+//
+//    SendByte_ads1299(ADS1299_CH1SET, lwConfigReg);
+//    SendByte_ads1299(ADS1299_CH2SET, lwConfigReg);
+//    SendByte_ads1299(ADS1299_CH3SET, lwConfigReg);
+//    SendByte_ads1299(ADS1299_CH4SET, lwConfigReg);
+//    SendByte_ads1299(ADS1299_CH5SET, lwConfigReg);
+//    SendByte_ads1299(ADS1299_CH6SET, lwConfigReg);
+//    SendByte_ads1299(ADS1299_CH7SET, lwConfigReg);
+//    SendByte_ads1299(ADS1299_CH8SET, lwConfigReg);
+//
+//    usleep(5);
 
     //=====================================================
     //BIAS_SENSP: Bias Drive Positive Derivation Register
@@ -140,6 +140,22 @@ BOOL Init_ads1299 (void)
 
     usleep(5);
 
+    //=====================================================
+    // Send RDATAC to enable Read Data Continuous mode.
+    //=====================================================
+    SendCommad_ads1299(ADS1299_RDATAC);
+
+    // wait 4 tCLK cycles to decode and execute the command.
+    usleep(5);
+
+    //=====================================================
+    // Send START to Start and restart (synchronize) conversions.
+    //=====================================================
+    SendCommad_ads1299(ADS1299_START);
+
+    // wait 4 tCLK cycles to decode and execute the command.
+    usleep(5);
+
     return lbResult;
 }
 
@@ -170,6 +186,7 @@ BOOL SendCommad_ads1299 (unsigned char Command)
     {
         perror("ERROR to reset the ads1299.\n");
         lbResult = FALSE;
+        /* TODO: tracear un error */
     }
 
     return lbResult;
@@ -204,6 +221,7 @@ BOOL SendByte_ads1299 (unsigned char Address, unsigned char Transfer)
     {
         perror("ERROR to reset the ads1299.\n");
         lbResult = FALSE;
+        /* TODO: tracear un error */
     }
 
     return lbResult;

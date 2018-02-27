@@ -50,6 +50,7 @@ int Open_device(char *spi_dev_path, int *fd)
     	// An error have occurred opening the device.
     	perror ("Failed open the device and returned error ");
     	lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
 
     return lResult;
@@ -79,12 +80,14 @@ int Set_SPI_mode(int fd, unsigned char spi_mode)
     {
     	perror ("Failed to set the write SPI mode and returned error ");
     	lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
 
     if(ioctl(fd, SPI_IOC_RD_MODE, &spi_mode) < NUM_0)
     {
     	perror ("Failed to set the Read SPI mode and returned error ");
     	lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
 
     return lResult;
@@ -115,6 +118,7 @@ int Set_SPI_bits(int fd, unsigned char bits_per_word)
     	perror ("Failed to set the No. of bits/transation in write operation"
     			" and returned error ");
     	lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
 
     if(ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits_per_word) < NUM_0)
@@ -122,6 +126,7 @@ int Set_SPI_bits(int fd, unsigned char bits_per_word)
     	perror ("Failed to set the No. of bits/transation in read operation"
     			" and returned error ");
     	lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
 
     return lResult;
@@ -152,6 +157,7 @@ int Set_SPI_speed(int fd, unsigned long bus_speed_HZ)
     	perror ("Failed to set the frecuency for the write operation "
     			"and returned error ");
     	lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
 
     if(ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &bus_speed_HZ) < NUM_0)
@@ -159,6 +165,7 @@ int Set_SPI_speed(int fd, unsigned long bus_speed_HZ)
     	perror ("Failed to set the frecuency for the read operation "
     			"and returned error ");
     	lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
 
     return lResult;
@@ -229,6 +236,7 @@ int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
     {
     	perror ("SPI: Failed to open spidev1.0 | ");
         lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
 
     /* Set the SPI mode for RD and WR operations */
@@ -236,6 +244,7 @@ int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
     {
     	perror ("SPI: Failed to set SPIMODE | ");
         lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
 
     /* Set the No. of bits per transaction */
@@ -243,6 +252,7 @@ int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
     {
     	perror ("SPI: Failed to set No. of bits per word | ");
         lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
 
     /* Set the SPI bus speed in Hz */
@@ -250,6 +260,7 @@ int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
     {
     	perror ("SPI: Failed to set SPI bus frequency | ");
         lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
 
     /* Initialize the spi_ioc_transfer structure that will be passed to the
@@ -299,6 +310,7 @@ int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
     {
         perror("SPI: SPI_IOC_MESSAGE Failed |");
         lResult = ERROR_RET;
+        /* TODO: tracear un error */
     }
     return lResult;
 }
@@ -335,6 +347,7 @@ unsigned char SPIDEV1_single_transfer(unsigned char data_byte)
     {
         perror("SPI: SPI_IOC_MESSAGE Failed |");
         rec_byte = NEG_1;
+        /* TODO: tracear un error */
     }
 
     return rec_byte;

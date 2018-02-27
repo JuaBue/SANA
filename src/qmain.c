@@ -84,7 +84,7 @@ int main(void)
     //Initialize local variable
     lIndex = NUM_0;
 
-    Tx_spi[0] = 0x56;
+    Tx_spi[0] = 0x00;
     Tx_spi[1] = 0x00;
 
     //SPI INITIALIZE
@@ -93,6 +93,7 @@ int main(void)
                       SPI_MODE1) == NEG_1)
     {
         printf("(Main)spidev1.0 initialization failed\r\n");
+        /* TODO: tracear un error */
     }
     else
     {
@@ -105,6 +106,7 @@ int main(void)
 	{
 		perror("Hemos tenido un problema con la cola\n");
 	    exit(1);
+	    /* TODO: tracear un error */
 	}
 	else
 	{
@@ -116,7 +118,11 @@ int main(void)
 	{
 		perror ("ERROR the thread has not been created.\n");
 		exit (-1);
+		/* TODO: tracear un error */
 	}
+
+	// INIT ADS1299
+    Init_ads1299();
 
     while (NUM_1)
     {
@@ -127,11 +133,11 @@ int main(void)
         else
         {
             printf("(Main)spidev1.0: Transaction Failed\r\n");
+            /* TODO: tracear un error */
         }
-        Init_ads1299();
 
         Set_Data.Id_Message = NUM_1;
-        Set_Data.Data_SPI = RX_spi[1];//RX_spi[0];
+        Set_Data.Data_SPI = RX_spi[0];//RX_spi[0];
         msgsnd (msqid,&Set_Data,sizeof(int),IPC_NOWAIT);
         printf("Valor recibido: %lu\n", (unsigned long)RX_spi[0]);
         printf("Num. Transaccion: %d\r\n", ++lIndex);
@@ -190,6 +196,7 @@ void *StoreData (void *parametro)
 	{
 		perror("ERROR creating the data queue.\n");
 	    exit(1);
+	    /* TODO: tracear un error */
 	}
 	else
 	{
@@ -203,6 +210,7 @@ void *StoreData (void *parametro)
 		if(!Print_LOG((unsigned int)Get_Data.Data_SPI))
 		{
 			printf("ERROR: The Message has not be able to logged!.");
+			/* TODO: tracear un error */
 		}
         usleep(50000);
 	}
