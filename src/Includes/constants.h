@@ -81,6 +81,7 @@
 //***************************************
 // SPI Generic Definitions
 #define SPIDEV_BYTES_NUM                 8
+#define RDATAC_BYTES_NUM                 27
 #define SPIDEV_DATA_BITS_NUM             8
 #define SPIDEV_DELAY_US                  0
 #define SPI_SS_HIGH                      1

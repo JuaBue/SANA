@@ -22,8 +22,8 @@ static SPI_DeviceT SPI_device0;
 static struct spi_ioc_transfer  transfer_spidev0;
 
 /* Globals */
-unsigned char Tx_spi[SPIDEV_BYTES_NUM];
-unsigned char RX_spi[SPIDEV_BYTES_NUM];
+unsigned char Tx_spi[RDATAC_BYTES_NUM];
+unsigned char RX_spi[RDATAC_BYTES_NUM];
 
 
 /*
@@ -45,7 +45,7 @@ int Open_device(char *spi_dev_path, int *fd)
     //Initialize local variable
     lResult = NO_ERROR_RET;
 
-    if((*fd = open(spi_dev_path, O_RDWR)) < NUM_0)
+    if((*fd = open(spi_dev_path, O_RDWR | O_NOCTTY | O_NDELAY | O_EXCL)) < NUM_0)//O_RDWR)) < NUM_0)
     {
     	// An error have occurred opening the device.
     	perror ("Failed open the device and returned error ");
@@ -305,6 +305,7 @@ int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
     /* Override No. of bytes per transaction */
     transfer_spidev0.len = bytes_num;
 
+    printf("@@@@@@@@@:%d", SPI_device0.fd_spi);
     /* Perform a SPI Transaction */
     if (ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(1), &transfer_spidev0)<0)
     {

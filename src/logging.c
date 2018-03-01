@@ -86,7 +86,7 @@ int Logging()
  *	FALSE if the log has not been logged. TRUE if the message has been logged.
  * -----------------------------------------------------------------------------
  */
-BOOL Print_LOG (unsigned int lDato)
+BOOL Print_LOG (char *lDato)
 {
     BOOL           lbResult;
     FILE           *lfFile;
@@ -113,10 +113,7 @@ BOOL Print_LOG (unsigned int lDato)
         }
         else
         {
-        	//strcat(lsLog, Get_TimeStamp());
-        	sprintf(lsLog, "%s [ADS1299-%d]:\t %d\n",Get_TimeStamp(), ADS_ID,
-        			lDato);
-			//strcat(lsLog, "\n");
+        	sprintf(lsLog, "%s [ADS1299-%d]\t%s\n",Get_TimeStamp(), ADS_ID, lDato);
 			fprintf (lfFile, "%s", lsLog);
 			fclose (lfFile);
 			lbResult = TRUE;
@@ -251,3 +248,5 @@ char *Get_TimeStamp (void)
 
     return TimeStamp;
 }
+
+
