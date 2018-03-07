@@ -84,46 +84,43 @@ int Logging()
  *
  *  \return
  *	FALSE if the log has not been logged. TRUE if the message has been logged.
+ *
  * -----------------------------------------------------------------------------
  */
 BOOL Print_LOG (char *lDato)
 {
     BOOL           lbResult;
-    FILE           *lfFile;
-    BOOL           lbCreatePath;
-    static char    lsPath[MAX_SCRLINE] = "\0";
-    static char    lsLog[MAX_SCRLINE] = "\0";
+    FILE    	   *lfFile;
+    static char    lsPath[MAX_PATHLINE] = "\0";
+    static char    lsLog[MAX_SCRLINE]  = "\0";
+    struct stat st;
 
     /* Initialize output data */
     lbResult     = FALSE;
-    lbCreatePath = FALSE;
 
-    /* create the path to store the LOGs */
-    Create_Path( (char *)lsPath);
-    lbCreatePath = TRUE;
-    if (lbCreatePath)
-    {
-        strcat(lsPath, "//");
-        strcat(lsPath, "LOGs.txt");
-        lfFile = fopen (lsPath, "aw+");
+    stat(lsPath, &st);
 
-        if (lfFile==NULL)
-        {
-            printf("\nError de apertura del archivo. \n\n");
-        }
-        else
-        {
-        	sprintf(lsLog, "%s [ADS1299-%d]\t%s\n",Get_TimeStamp(), ADS_ID, lDato);
-			fprintf (lfFile, "%s", lsLog);
-			fclose (lfFile);
-			lbResult = TRUE;
-        }
-    }
-    else
+    /* get the path to store the LOGs */
+    if (!lsPath[NUM_0] || ((int)st.st_size >= 500000))
     {
-        printf("\nError de fichero :). \n\n");
-        /* TODO: tracear un error */
+       	Create_Path( (char *)lsPath);
+       	printf("%s",lsPath);
     }
+
+	lfFile = fopen (lsPath, "aw+");
+
+	if (lfFile==NULL)
+	{
+		printf("\nError de apertura del archivo. \n\n");
+	}
+	else
+	{
+		sprintf(lsLog, "%s [ADS1299-%d]\t%s\n",Get_TimeStamp(), ADS_ID, lDato);
+		fprintf (lfFile, "%s", lsLog);
+		fclose (lfFile);
+		lbResult = TRUE;
+	}
+
 
     return lbResult;
 }
@@ -133,57 +130,80 @@ BOOL Print_LOG (char *lDato)
  * -----------------------------------------------------------------------------
  *
  *  \par Overview:
- *  This function print the Log in a file.
+ *  This function create the file where the data has to be stored.
  *
  *  \return
  *  TRUE the path has been created, FALSE the path has not been created.
+ *
  * -----------------------------------------------------------------------------
  */
 const char *Create_Path (char *lsPath)
 {
-    BOOL   lbResult;
-    int    lwpath;
-    char *lcNamePath;
+    BOOL   			lbResult;
+    FILE           	*lfFile;
+    static int 	    lwCount = NUM_1;
+    char 		   	*lcNamePath;
+    char    		lsNameFile[MAX_SCRLINE] = "\0";
+    static char    	lsLog[MAX_SCRLINE]  = "\0";
+
 
     /* Initialize output data */
     lbResult = FALSE;
+    //lwCount  = NUM_1;
 
-    /* Initialize local variable */
-    lwpath = MIN_INT;
+    /* Create the path with the date to store the files. */
+    /* Get the date to create the folder to store the data files */
+	lcNamePath = Get_Date (TRUE);
 
-    lcNamePath = Get_Date (TRUE);
-
+    /* Check if the folder already exits  */
     if (NUM_0 == opendir(lcNamePath))
     {
-        lwpath = mkdir(lcNamePath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-
-        if (NUM_0 == lwpath)
+        if (NUM_0 == mkdir(lcNamePath, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH))
         {
             lbResult = TRUE;
         }
         else
         {
-
+        	/* The folder has not been possible to create */
             lbResult = FALSE;
             /* TODO: tracear un error */
         }
     }
     else
     {
-        /* The path already exist */
         lbResult = TRUE;
     }
 
+    // Store the path name.
+	strcpy(lsPath, lcNamePath);
+
+    /* If the path already exist create the file to store the data.*/
     if (TRUE == lbResult)
     {
-        strcpy(lsPath, lcNamePath);
-        strcat(lsPath, "//LOGs.txt");
-        //strcat(lsPath, "LOGs.txt");
-        //printf("%s", lsPath);
+    	// Create the file to store de data file.
+    	sprintf(lsNameFile, "//LOGs_v%d.tmp", lwCount);
+    	strcat(lsPath, lsNameFile);
+
+    	// Check if the file exist previously.
+    	while(access(lsPath, F_OK ) != NEG_1)
+    	{
+			lwCount++;
+			strcpy(lsPath, lcNamePath);
+			sprintf(lsNameFile, "//LOGs_v%d.txt", lwCount);
+			strcat(lsPath, lsNameFile);
+		}
+
+		// Set the header to the file.
+        lfFile = fopen (lsPath, "aw+");
+    	sprintf(lsLog, "Date\tTime\tADC ID\tStatus Register\tChipset 1\tChipset 2\t"
+    			"Chipset 3\tChipset 4\tChipset 5\tChipset 6\tChipset 7\t"
+    			"Chipset 8\t\n");
+		fprintf (lfFile, "%s", lsLog);
+		fclose (lfFile);
     }
 
-    strcpy(lsPath, lcNamePath);
 
+    // Return the name path plus filename.
     return lsPath;
 }
 
@@ -192,26 +212,29 @@ const char *Create_Path (char *lsPath)
  * -----------------------------------------------------------------------------
  *
  *  \par Overview:
- *  This function print the Log in a file.
+ *  This function create a format string with the time or date to include in
+ *  the Logs.
  *
  *  \return
+ *	A format string with the date or time.
  *
  * -----------------------------------------------------------------------------
  */
 char *Get_Date (BOOL SelTime)
 {
-    time_t t;
-    struct tm *tm;
-    static char FormatT[MAX_SCRLINE];
+    time_t         lTime;
+    struct tm      *tm;
+    static char    FormatT[MAX_SCRLINE];
 
     /* Initialize output data */
-    t = time (NULL);
-    tm = localtime(&t);
+    lTime = time (NULL);
+    tm = localtime(&lTime);
 
     /* get the time to log the events */
     if (TRUE == SelTime)
     {
-        sprintf(FormatT, "%02d%02d%02d", (tm->tm_year - 100), (tm->tm_mon + 1), tm->tm_mday);
+        sprintf(FormatT, "%02d%02d%02d", (tm->tm_year - 100),
+        		(tm->tm_mon + 1), tm->tm_mday);
     }
     else
     {
@@ -226,21 +249,22 @@ char *Get_Date (BOOL SelTime)
  * -----------------------------------------------------------------------------
  *
  *  \par Overview:
- *  This function print the Log in a file.
+ *  This function create a format string to stamp the time/date in the logs.
  *
  *  \return
+ *	The format string with the date and time.
  *
  * -----------------------------------------------------------------------------
  */
 char *Get_TimeStamp (void)
 {
-    time_t t;
-    struct tm *tm;
-    static char TimeStamp[MAX_SCRLINE];
+    time_t         lTime;
+    struct tm      *tm;
+    static char    TimeStamp[MAX_SCRLINE];
 
     /* Initialize output data */
-    t = time (NULL);
-    tm = localtime(&t);
+    lTime = time (NULL);
+    tm = localtime(&lTime);
 
     /* get the time to log the events */
     sprintf(TimeStamp, "%02d%02d%02d\t%02d:%02d:%02d\t", (tm->tm_year - 100),

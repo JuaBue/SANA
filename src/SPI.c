@@ -305,9 +305,8 @@ int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
     /* Override No. of bytes per transaction */
     transfer_spidev0.len = bytes_num;
 
-    printf("@@@@@@@@@:%d", SPI_device0.fd_spi);
     /* Perform a SPI Transaction */
-    if (ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(1), &transfer_spidev0)<0)
+    if (ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(27), &transfer_spidev0)<0)
     {
         perror("SPI: SPI_IOC_MESSAGE Failed |");
         lResult = ERROR_RET;

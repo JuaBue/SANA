@@ -42,6 +42,8 @@
  * FUNCTIONS
  *------------------------------------------------------------------------------
  */
-
+int InitSystem(void);
+void *StoreData (void *parametro);
+int UnitTest(void);
 
 #endif /* QMAIN_H_ */

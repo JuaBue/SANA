@@ -56,6 +56,5 @@ typedef struct{
     unsigned char     spi_mode;
 }SPI_DeviceT, *SPI_DevicePtr;
 
-#define KEY_QUEUE 5
 
 #endif /* INCLUDES_TYPES_H_ */
