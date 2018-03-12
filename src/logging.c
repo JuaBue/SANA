@@ -90,9 +90,10 @@ int Logging()
 BOOL Print_LOG (char *lDato)
 {
     BOOL           lbResult;
-    FILE    	   *lfFile;
-    static char    lsPath[MAX_PATHLINE] = "\0";
-    static char    lsLog[MAX_SCRLINE]  = "\0";
+    FILE    	   *lfFile                      = NULL;
+    static char    lsPath[20]     			    = "\0";
+    char           lsLog[MAX_SCRLINE + 1]       = "\0";
+    char 		   lcDateTime[MAX_TIMELINE + 1] = "\0";
     struct stat st;
 
     /* Initialize output data */
@@ -100,11 +101,11 @@ BOOL Print_LOG (char *lDato)
 
     stat(lsPath, &st);
 
+
     /* get the path to store the LOGs */
-    if (!lsPath[NUM_0] || ((int)st.st_size >= 500000))
+    if (!lsPath[NUM_0] || ((int)st.st_size >= 50000))
     {
-       	Create_Path( (char *)lsPath);
-       	printf("%s",lsPath);
+       	Create_Path(lsPath);
     }
 
 	lfFile = fopen (lsPath, "aw+");
@@ -115,12 +116,13 @@ BOOL Print_LOG (char *lDato)
 	}
 	else
 	{
-		sprintf(lsLog, "%s [ADS1299-%d]\t%s\n",Get_TimeStamp(), ADS_ID, lDato);
+		(void)Get_TimeStamp (TIME_YMDHMS, lcDateTime, sizeof(lcDateTime));
+		snprintf(lsLog, ARRAY_SIZE(lsLog), "%s [ADS1299-%d]\t%s\n",
+				lcDateTime, ADS_ID, lDato);
 		fprintf (lfFile, "%s", lsLog);
-		fclose (lfFile);
 		lbResult = TRUE;
+		fclose(lfFile);
 	}
-
 
     return lbResult;
 }
@@ -137,23 +139,23 @@ BOOL Print_LOG (char *lDato)
  *
  * -----------------------------------------------------------------------------
  */
-const char *Create_Path (char *lsPath)
+BOOL Create_Path (char *lsPath)
 {
     BOOL   			lbResult;
-    FILE           	*lfFile;
-    static int 	    lwCount = NUM_1;
-    char 		   	*lcNamePath;
-    char    		lsNameFile[MAX_SCRLINE] = "\0";
-    static char    	lsLog[MAX_SCRLINE]  = "\0";
+    FILE    	    *lfFile                            = NULL;
+    static int 	    lwCount 						   = NUM_1;
+    char 		   	lcNamePath[MAX_PATHLINE + 1]       = "\0";
+    char    		lsNameFile[MAX_FILENAME + 1]       = "\0";
+    char    		lcVersionTime[MAX_VERSIONLINE + 1] = "\0";
+    char    	    lsLog[MAX_SCRLINE + 1]             = "\0";
 
 
     /* Initialize output data */
     lbResult = FALSE;
-    //lwCount  = NUM_1;
 
     /* Create the path with the date to store the files. */
     /* Get the date to create the folder to store the data files */
-	lcNamePath = Get_Date (TRUE);
+	(void)Get_TimeStamp (TIME_YMD, lcNamePath, sizeof(lcNamePath));
 
     /* Check if the folder already exits  */
     if (NUM_0 == opendir(lcNamePath))
@@ -174,74 +176,33 @@ const char *Create_Path (char *lsPath)
         lbResult = TRUE;
     }
 
-    // Store the path name.
-	strcpy(lsPath, lcNamePath);
-
+	(void)Get_TimeStamp (TIME_NFILE, lcVersionTime, sizeof(lcVersionTime));
     /* If the path already exist create the file to store the data.*/
     if (TRUE == lbResult)
     {
     	// Create the file to store de data file.
-    	sprintf(lsNameFile, "//LOGs_v%d.tmp", lwCount);
-    	strcat(lsPath, lsNameFile);
+    	snprintf(lsPath, MAX_SCRLINE, "%s//LOGs_v%d.tmp", lcNamePath, lwCount);
 
     	// Check if the file exist previously.
     	while(access(lsPath, F_OK ) != NEG_1)
     	{
+    		snprintf(lsNameFile, 30, "%s//%s_LOGs_v%d.txt",lcNamePath,
+    				lcVersionTime, lwCount);
+    		rename(lsPath, lsNameFile);
 			lwCount++;
-			strcpy(lsPath, lcNamePath);
-			sprintf(lsNameFile, "//LOGs_v%d.txt", lwCount);
-			strcat(lsPath, lsNameFile);
+	    	snprintf(lsPath, 50, "%s//LOGs_v%d.tmp", lcNamePath, lwCount);
 		}
-
 		// Set the header to the file.
         lfFile = fopen (lsPath, "aw+");
-    	sprintf(lsLog, "Date\tTime\tADC ID\tStatus Register\tChipset 1\tChipset 2\t"
-    			"Chipset 3\tChipset 4\tChipset 5\tChipset 6\tChipset 7\t"
-    			"Chipset 8\t\n");
+    	snprintf(lsLog, ARRAY_SIZE(lsLog), "Date\tTime\tADC ID\tStatus Register"
+    			"\tChipset 1\tChipset 2\tChipset 3\tChipset 4\tChipset 5\t"
+    			"Chipset 6\tChipset 7\tChipset 8\t\n");
 		fprintf (lfFile, "%s", lsLog);
 		fclose (lfFile);
     }
 
-
     // Return the name path plus filename.
-    return lsPath;
-}
-
-
-/*
- * -----------------------------------------------------------------------------
- *
- *  \par Overview:
- *  This function create a format string with the time or date to include in
- *  the Logs.
- *
- *  \return
- *	A format string with the date or time.
- *
- * -----------------------------------------------------------------------------
- */
-char *Get_Date (BOOL SelTime)
-{
-    time_t         lTime;
-    struct tm      *tm;
-    static char    FormatT[MAX_SCRLINE];
-
-    /* Initialize output data */
-    lTime = time (NULL);
-    tm = localtime(&lTime);
-
-    /* get the time to log the events */
-    if (TRUE == SelTime)
-    {
-        sprintf(FormatT, "%02d%02d%02d", (tm->tm_year - 100),
-        		(tm->tm_mon + 1), tm->tm_mday);
-    }
-    else
-    {
-        sprintf(FormatT, "%02d:%02d:%02d", tm->tm_hour, tm->tm_min, tm->tm_sec);
-    }
-
-    return FormatT;
+    return lbResult;
 }
 
 
@@ -256,21 +217,50 @@ char *Get_Date (BOOL SelTime)
  *
  * -----------------------------------------------------------------------------
  */
-char *Get_TimeStamp (void)
+BOOL Get_TimeStamp (TIME_MODE lSelTypeTime, char * TimeStamp,
+		size_t lBufferLength)
 {
     time_t         lTime;
     struct tm      *tm;
-    static char    TimeStamp[MAX_SCRLINE];
 
     /* Initialize output data */
     lTime = time (NULL);
-    tm = localtime(&lTime);
+    tm    = localtime (&lTime);
 
-    /* get the time to log the events */
-    sprintf(TimeStamp, "%02d%02d%02d\t%02d:%02d:%02d\t", (tm->tm_year - 100),
-    		(tm->tm_mon + 1), tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+    switch(lSelTypeTime)
+    {
+		case TIME_YMD:
+			/* get the time to folder name */
+	        snprintf(TimeStamp, lBufferLength, "%02d%02d%02d",
+	        		(tm->tm_year - 100), (tm->tm_mon + 1), tm->tm_mday);
+			break;
 
-    return TimeStamp;
+		case TIME_HMS:
+			/* get the time */
+	        snprintf(TimeStamp, lBufferLength, "%02d:%02d:%02d",
+	        		tm->tm_hour, tm->tm_min, tm->tm_sec);
+			break;
+
+		case TIME_YMDHMS:
+		    /* get the time to log the events */
+		    snprintf(TimeStamp, lBufferLength, "%02d%02d%02d\t%02d:%02d:%02d\t",
+		    		(tm->tm_year - 100), (tm->tm_mon + 1), tm->tm_mday,
+					tm->tm_hour, tm->tm_min, tm->tm_sec);
+			break;
+
+		case TIME_NFILE:
+			/* get the time to name of the file */
+	        snprintf(TimeStamp, lBufferLength, "%02d%02d%02d",
+	        		tm->tm_hour, tm->tm_min, tm->tm_sec);
+			break;
+
+		default:
+			/* do nothing */
+			/* TODO: include an error. */
+			break;
+    }
+
+    return TRUE;
 }
 
 

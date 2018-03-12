@@ -135,11 +135,6 @@ int main(void)
         }
         if (SPIDEV1_transfer(Tx_spi, RX_spi, RDATAC_BYTES_NUM) == NUM_0)
         {
-            for (int y = 0; y < RDATAC_BYTES_NUM; y++)
-            {
-            	printf("###############Rx_spi[%d] = %lu\n", y, (unsigned long)RX_spi[y]);
-
-            }
         	// Copy the data input into the queue data structure.
             Set_Data.Id_Message = NUM_1;
             memcpy(&Set_Data.Data_RX_spi[0],&RX_spi[0],ARRAY_SIZE(Set_Data.Data_RX_spi));

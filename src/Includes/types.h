@@ -23,6 +23,7 @@
  */
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 
+
 /*
  *------------------------------------------------------------------------------
  * TYPE DEFINITIONS
@@ -43,6 +44,14 @@ typedef enum{
     SPI_MODE2 = 2,
     SPI_MODE3 = 3
 }SPI_MODE;
+
+/* Enum Date/Time Modes*/
+typedef enum{
+    TIME_YMD    = 0,
+    TIME_HMS    = 1,
+    TIME_YMDHMS = 2,
+    TIME_NFILE  = 3
+}TIME_MODE;
 
 /*SPI device configuration structure*/
 typedef struct{

@@ -75,7 +75,10 @@
  *=====================================================
  */
 #define MAX_SCRLINE             200
-#define MAX_PATHLINE            100
+#define MAX_PATHLINE            6
+#define MAX_VERSIONLINE         6
+#define MAX_TIMELINE            16
+#define MAX_FILENAME			36
 
 
 

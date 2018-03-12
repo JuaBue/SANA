@@ -46,9 +46,8 @@
  */
 int Logging(void);
 BOOL Print_LOG(char *lDato);
-const char * Create_Path(char *lsPath);
-char * Get_Date (BOOL time);
-char * Get_TimeStamp (void);
+BOOL Create_Path(char *lsPath);
+BOOL Get_TimeStamp (TIME_MODE lSelTypeTime, char * TimeStamp, size_t lBufferLength);
 
 #endif /* LOGGING_H_ */
 
