@@ -80,27 +80,27 @@ static const char *log_sysLogSeverityNames[] =
 BOOL Print_LOG (char *lDato)
 {
     BOOL           lbResult;
-    FILE    	   *lfFile                      = NULL;
-    static char    lsPath[20]     			    = "\0";
-    char           lsLog[MAX_SCRLINE + 1]       = "\0";
-    char 		   lcDateTime[MAX_TIMELINE + 1] = "\0";
+    FILE    	   *lfFile                      		 = NULL;
+    static char    lsPath[MAX_PATHLINE + END_STRING]     = "\0";
+    char           lsLog[MAX_SCRLINE + END_STRING]       = "\0";
+    char 		   lcDateTime[MAX_TIMELINE + END_STRING] = "\0";
     struct stat    st;
 
     /* Initialize output data */
-    lbResult     = FALSE;
+    lbResult = FALSE;
 
     /* Initialize local variable */
     stat(lsPath, &st);
 
     /* get the path to store the LOGs if there is no file to store the data or the file is full.*/
-    if (!lsPath[NUM_0] || ((int)st.st_size >= MAX_FILESIZE))
+    if (!lsPath[INIT_POS] || ((int)st.st_size >= MAX_FILESIZE))
     {
        	Create_Path(lsPath);
     }
 
 	lfFile = fopen (lsPath, "aw+");
 
-	if (lfFile==NULL)
+	if (NULL == lfFile)
 	{
 		printf("\nError de apertura del archivo. \n\n");
 		/*TODO: tracear error.*/
@@ -111,9 +111,9 @@ BOOL Print_LOG (char *lDato)
 		// Get the time and data string.
 		Get_TimeStamp (TIME_YMDHMS, lcDateTime, sizeof(lcDateTime));
 		// Set the format sting with the data in the file.
-		snprintf(lsLog, ARRAY_SIZE(lsLog), "%s [ADS1299-%d]\t%s\n",	lcDateTime, ADS_ID, lDato);
+		snprintf (lsLog, ARRAY_SIZE(lsLog), "%s [ADS1299-%d]\t%s\n",	lcDateTime, ADS_ID, lDato);
 		fprintf (lfFile, "%s", lsLog);
-		fclose(lfFile);
+		fclose (lfFile);
 		// The date has been successfully set.
 		lbResult = TRUE;
 	}
@@ -136,10 +136,10 @@ BOOL Print_LOG (char *lDato)
 BOOL Init_Trace (void)
 {
     BOOL           lbResult;
-    FILE    	   *lfFile                           = NULL;
-    char 		   lcNamePath[MAX_FILETRACENAME + 1] = "\0";
-    char    	   lsLog[MAX_SCRLINE + 1]            = "\0";
-    char           lsTraceName[MAX_FILETRACENAME +1] = "\0";
+    FILE    	   *lfFile                                     = NULL;
+    char 		   lcNamePath[MAX_FILETRACENAME + END_STRING]  = "\0";
+    char    	   lsLog[MAX_SCRLINE + END_STRING]             = "\0";
+    char           lsTraceName[MAX_FILETRACENAME + END_STRING] = "\0";
 
     /* Initialize output data */
     lbResult = FALSE;
@@ -172,7 +172,7 @@ BOOL Init_Trace (void)
     // Create the path of the trace file.
 
 	// Check if the file exist previously.
-	if(access(lsTraceName, F_OK ) == NEG_1)
+	if(NEG_1 == access(lsTraceName, F_OK ))
 	{
 		lfFile = fopen (lsTraceName, "aw+");
 	   	snprintf(lsLog, ARRAY_SIZE(lsLog), "Date\tTime\tADC ID\tStatus Register\tChipset 1\tChipset"
@@ -204,10 +204,10 @@ BOOL Init_Trace (void)
 BOOL Print_Trace (LOG_SEV_TYPE leSevType, const char *lcTrace)
 {
     BOOL           lbResult;
-    FILE    	   *lfFile                           = NULL;
-    char 		   lcNamePath[MAX_FILETRACENAME + 1] = "\0";
-    char    	   lsLog[MAX_SCRLINE + 1]            = "\0";
-    char           lsTraceName[MAX_FILETRACENAME +1] = "\0";
+    FILE    	   *lfFile                                     = NULL;
+    char 		   lcNamePath[MAX_FILETRACENAME + END_STRING]  = "\0";
+    char    	   lsLog[MAX_SCRLINE + END_STRING]             = "\0";
+    char           lsTraceName[MAX_FILETRACENAME + END_STRING] = "\0";
 
     /* Initialize output data */
     lbResult = FALSE;
@@ -218,7 +218,7 @@ BOOL Print_Trace (LOG_SEV_TYPE leSevType, const char *lcTrace)
 
 	snprintf(lsTraceName, sizeof(lsTraceName), TRACE_FILE, lcNamePath, lcNamePath);
 	// Check if the file exist previously.
-	if(access(lsTraceName, F_OK ) != NEG_1)
+	if(NEG_1 != access(lsTraceName, F_OK ))
 	{
 		lfFile = fopen (lsTraceName, "aw+");
 		Get_TimeStamp (TIME_YMDHMS, lcNamePath, sizeof(lcNamePath));
@@ -252,13 +252,13 @@ BOOL Print_Trace (LOG_SEV_TYPE leSevType, const char *lcTrace)
 BOOL Create_Path (char *lsPath)
 {
     BOOL   			lbResult;
-    FILE    	    *lfFile                            = NULL;
-    static int 	    lwCount 						   = NUM_1;
-    char 		   	lcNamePath[MAX_PATHLINE + 1]       = "\0";
-    char    		lsNameFile[MAX_FILENAME + 1]       = "\0";
-    char    		lcVersionTime[MAX_VERSIONLINE + 1] = "\0";
-    char    	    lsLog[MAX_SCRLINE + 1]             = "\0";
-    char    	    lsTrace[MAX_SCRLINE + 1]           = "\0";
+    FILE    	    *lfFile                            			= NULL;
+    static int 	    lwCount 						   			= NUM_1;
+    char 		   	lcNamePath[MAX_PATHLINE + END_STRING]       = "\0";
+    char    		lsNameFile[MAX_FILENAME + END_STRING]       = "\0";
+    char    		lcVersionTime[MAX_VERSIONLINE + END_STRING] = "\0";
+    char    	    lsLog[MAX_SCRLINE + END_STRING]             = "\0";
+    char    	    lsTrace[MAX_SCRLINE + END_STRING]           = "\0";
 
 
     /* Initialize output data */
@@ -295,7 +295,7 @@ BOOL Create_Path (char *lsPath)
     	snprintf(lsPath, (MAX_FILENAME + 1), "%s//LOGs_v%d.tmp", lcNamePath, lwCount);
 
     	// Check if the file exist previously.
-    	while(access(lsPath, F_OK ) != NEG_1)
+    	while(NEG_1 != access(lsPath, F_OK ))
     	{
     		snprintf(lsNameFile, (MAX_FILENAME + 1), "%s//%s_LOGs_v%d.txt",lcNamePath,
     				lcVersionTime, lwCount);

@@ -306,7 +306,7 @@ int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
     transfer_spidev0.len = bytes_num;
 
     /* Perform a SPI Transaction */
-    if (ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(27), &transfer_spidev0)<0)
+    if (ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(RDATAC_BYTES_NUM), &transfer_spidev0) < NUM_0)
     {
         perror("SPI: SPI_IOC_MESSAGE Failed |");
         lResult = ERROR_RET;
@@ -343,7 +343,7 @@ unsigned char SPIDEV1_single_transfer(unsigned char data_byte)
     transfer_spidev0.rx_buf = (unsigned long)&rec_byte;
 
     /* Perform an SPI Transaction */
-    if (ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(1), &transfer_spidev0)<0)
+    if (ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(SPI_ONE_BYTE), &transfer_spidev0) < NUM_0)
     {
         perror("SPI: SPI_IOC_MESSAGE Failed |");
         rec_byte = NEG_1;

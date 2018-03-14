@@ -75,12 +75,14 @@
  *=====================================================
  */
 #define MAX_SCRLINE             200
-#define MAX_PATHLINE            16
+#define MAX_PATHLINE            26
 #define MAX_VERSIONLINE         16
 #define MAX_TIMELINE            16
 #define MAX_FILENAME			36
 #define MAX_FILETRACENAME    	50
 #define MAX_FILESIZE			50000
+#define SYNC_TIME				50000
+#define END_STRING				1
 
 /*
  *=====================================================
@@ -95,6 +97,7 @@
  * Type bonders definitions
  *=====================================================
  */
+#define INIT_POS				0
 #define MIN_INT                 (int)0
 #define MAX_INT                 (int)0xFFFF
 

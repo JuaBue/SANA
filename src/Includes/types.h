@@ -64,11 +64,11 @@ typedef enum{
 
 /* Enum facility name for trace */
 typedef enum{
-	LOG_QMAIN             = 0,
-	LOG_SPI               = 1,
-	LOG_LOGGING           = 2,
-	LOG_QUEUEDATA         = 3,
-	LOG_ADS1299           = 4
+	LOG_QMAIN     = 0,
+	LOG_SPI       = 1,
+	LOG_LOGGING   = 2,
+	LOG_QUEUEDATA = 3,
+	LOG_ADS1299   = 4
 }LOG_FAC_TYPE;
 
 /*SPI device configuration structure*/
