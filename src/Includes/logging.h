@@ -44,8 +44,9 @@
  * PRIVATE PROTOTYPES
  *------------------------------------------------------------------------------
  */
-int Logging(void);
 BOOL Print_LOG(char *lDato);
+BOOL Init_Trace();
+BOOL Print_Trace (LOG_SEV_TYPE leSevType, const char *lcTrace);
 BOOL Create_Path(char *lsPath);
 BOOL Get_TimeStamp (TIME_MODE lSelTypeTime, char * TimeStamp, size_t lBufferLength);
 

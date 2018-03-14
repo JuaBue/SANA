@@ -75,12 +75,20 @@
  *=====================================================
  */
 #define MAX_SCRLINE             200
-#define MAX_PATHLINE            6
-#define MAX_VERSIONLINE         6
+#define MAX_PATHLINE            16
+#define MAX_VERSIONLINE         16
 #define MAX_TIMELINE            16
 #define MAX_FILENAME			36
+#define MAX_FILETRACENAME    	50
+#define MAX_FILESIZE			50000
 
-
+/*
+ *=====================================================
+ * Trace definitions
+ *=====================================================
+ */
+#define TRACE_FILE              "%s//[%s]Tace_SANA.txt"
+#define MAX_INT                 (int)0xFFFF
 
 /*
  *=====================================================

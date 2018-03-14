@@ -53,6 +53,24 @@ typedef enum{
     TIME_NFILE  = 3
 }TIME_MODE;
 
+/* Enum type of trace */
+typedef enum{
+	LOG_SEV_ERROR         = 0,
+	LOG_SEV_WARNING       = 1,
+	LOG_SEV_NOTICE        = 2,
+	LOG_SEV_INFORMATIONAL = 3,
+	LOG_SEV_DEBUG         = 4
+}LOG_SEV_TYPE;
+
+/* Enum facility name for trace */
+typedef enum{
+	LOG_QMAIN             = 0,
+	LOG_SPI               = 1,
+	LOG_LOGGING           = 2,
+	LOG_QUEUEDATA         = 3,
+	LOG_ADS1299           = 4
+}LOG_FAC_TYPE;
+
 /*SPI device configuration structure*/
 typedef struct{
     char*             spi_dev_path;
@@ -64,6 +82,7 @@ typedef struct{
     unsigned char     spi_data_bits_No;
     unsigned char     spi_mode;
 }SPI_DeviceT, *SPI_DevicePtr;
+
 
 
 #endif /* INCLUDES_TYPES_H_ */
