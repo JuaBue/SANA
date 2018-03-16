@@ -1,8 +1,8 @@
 /*
  ============================================================================
  Name        : das1299.c
- Author      :
- Version     :
+ Author      : Juan Ignacio Bueno Gallego
+ Version     : 1.0
  Copyright   :
  Description :
  ============================================================================
@@ -57,7 +57,7 @@ BOOL Init_ads1299 (void)
     SendCommad_ads1299(ADS1299_RESET);
 
     // wait 18 tCLK cycles to decode and execute the command.
-    usleep(20);
+    usleep(ADS1299_18_tCLK);
 
 
     //=====================================================
@@ -66,7 +66,7 @@ BOOL Init_ads1299 (void)
     SendCommad_ads1299(ADS1299_SDATAC);
 
     // wait 4 tCLK cycles to decode and execute the command.
-    usleep(5);
+    usleep(ADS1299_4_tCLK);
 
     //=====================================================
     //ICS. Individual Channel Settings for test_signal
@@ -86,7 +86,7 @@ BOOL Init_ads1299 (void)
     SendByte_ads1299(ADS1299_CH7SET, lwConfigReg);
     SendByte_ads1299(ADS1299_CH8SET, lwConfigReg);
 
-    usleep(5);
+    usleep(ADS1299_4_tCLK);
 
 //    //=====================================================
 //    //ICS. Individual Channel Settings for signal_positiv
@@ -119,7 +119,7 @@ BOOL Init_ads1299 (void)
 
     SendByte_ads1299(ADS1299_BIAS_SENSN, lwConfigReg);
 
-    usleep(5);
+    usleep(ADS1299_4_tCLK);
 
     //=====================================================
     //CONFIG3: Bias Drive Positive Derivation Register
@@ -138,7 +138,7 @@ BOOL Init_ads1299 (void)
 
     SendByte_ads1299(ADS1299_CONFIG3, lwConfigReg);
 
-    usleep(5);
+    usleep(ADS1299_4_tCLK);
 
     //=====================================================
     // Send RDATAC to enable Read Data Continuous mode.
@@ -146,7 +146,7 @@ BOOL Init_ads1299 (void)
     SendCommad_ads1299(ADS1299_RDATAC);
 
     // wait 4 tCLK cycles to decode and execute the command.
-    usleep(5);
+    usleep(ADS1299_4_tCLK);
 
     //=====================================================
     // Send START to Start and restart (synchronize) conversions.
@@ -154,7 +154,7 @@ BOOL Init_ads1299 (void)
     SendCommad_ads1299(ADS1299_START);
 
     // wait 4 tCLK cycles to decode and execute the command.
-    usleep(5);
+    usleep(ADS1299_4_tCLK);
 
     return lbResult;
 }
@@ -177,10 +177,10 @@ BOOL SendCommad_ads1299 (unsigned char Command)
     lbResult     = TRUE;
 
     //Reset values of the transfer.
-    memset(Tx_spi, 0, sizeof(Tx_spi));
-    memset(RX_spi, 0, sizeof(RX_spi));
+    memset(Tx_spi, NUM_0, sizeof(Tx_spi));
+    memset(RX_spi, NUM_0, sizeof(RX_spi));
 
-    Tx_spi[0] = Command;
+    Tx_spi[COMMAND_POS] = Command;
 
     if (SPIDEV1_transfer(Tx_spi, RX_spi, NO_OF_BYTES) == ERROR_RET)
     {
@@ -211,13 +211,13 @@ BOOL SendByte_ads1299 (unsigned char Address, unsigned char Transfer)
     lbResult     = TRUE;
 
     //Reset values of the transfer.
-    memset(Tx_spi, 0, sizeof(Tx_spi));
-    memset(RX_spi, 0, sizeof(RX_spi));
+    memset(Tx_spi, NUM_0, sizeof(Tx_spi));
+    memset(RX_spi, NUM_0, sizeof(RX_spi));
 
-    Tx_spi[0] = Address;
-    Tx_spi[1] = Transfer;
+    Tx_spi[ADDRESS_POS]  = Address;
+    Tx_spi[TRANSFER_POS] = Transfer;
 
-    if (SPIDEV1_transfer(Tx_spi, RX_spi, NO_OF_BYTES) == ERROR_RET)
+    if (ERROR_RET == SPIDEV1_transfer(Tx_spi, RX_spi, NO_OF_BYTES))
     {
         perror("ERROR to reset the ads1299.\n");
         lbResult = FALSE;

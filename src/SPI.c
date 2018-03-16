@@ -1,29 +1,74 @@
 /*
-* SPI.c
-*
-*  Created on  : 8 February , 2018
-*  Author      : Juan Igancio Bueno Gallego
-*  Description : This is an SPI Library for the BeagleBone that consists of the
-*  API's to enable SPI transactions.
-*/
+ ===================================================================================================
+ Name        : SPI.c
+ Author      : Juan Ignacio Bueno Gallego
+ Version     : 1.0
+ Created on  : 8 February , 2018
+ Description : This is an SPI Library for the BeagleBone that consists of the API's to enable
+ 	 	 	   SPI transactions.
+ ===================================================================================================
+ */
 
 /*
  *------------------------------------------------------------------------------
  * INCLUDE FILES
  *------------------------------------------------------------------------------
  */
-#include "include.h"
+#include <include.h>
 
 
+/*
+ *--------------------------------------------------------------------------------------------------
+ * CONSTANTS
+ *--------------------------------------------------------------------------------------------------
+ */
 
 
+/*
+ *--------------------------------------------------------------------------------------------------
+ * TYPE DEFINITIONS
+ *--------------------------------------------------------------------------------------------------
+ */
+
+
+/*
+ *--------------------------------------------------------------------------------------------------
+ * PRIVATE PROTOTYPES
+ *--------------------------------------------------------------------------------------------------
+ */
+
+
+/*
+ *--------------------------------------------------------------------------------------------------
+ * STRUCTURES
+ *--------------------------------------------------------------------------------------------------
+ */
 /* Static objects for spidev0.0 */
-static SPI_DeviceT SPI_device0;
-static struct spi_ioc_transfer  transfer_spidev0;
+static SPI_DeviceT                SPI_device0;
+static struct spi_ioc_transfer    transfer_spidev0;
 
-/* Globals */
-unsigned char Tx_spi[RDATAC_BYTES_NUM];
-unsigned char RX_spi[RDATAC_BYTES_NUM];
+
+/*
+ *--------------------------------------------------------------------------------------------------
+ * GLOBAL VARIABLEs
+ *--------------------------------------------------------------------------------------------------
+ */
+unsigned char    Tx_spi[RDATAC_BYTES_NUM];
+unsigned char    RX_spi[RDATAC_BYTES_NUM];
+
+/*
+ *--------------------------------------------------------------------------------------------------
+ * MAIN FUNCTION
+ *--------------------------------------------------------------------------------------------------
+ */
+
+
+/*
+ *--------------------------------------------------------------------------------------------------
+ * FUNCTIONS
+ *--------------------------------------------------------------------------------------------------
+ */
+
 
 
 /*
@@ -45,7 +90,7 @@ int Open_device(char *spi_dev_path, int *fd)
     //Initialize local variable
     lResult = NO_ERROR_RET;
 
-    if((*fd = open(spi_dev_path, O_RDWR | O_NOCTTY | O_NDELAY | O_EXCL)) < NUM_0)//O_RDWR)) < NUM_0)
+    if(NUM_0 > (*fd = open(spi_dev_path, O_RDWR | O_NOCTTY | O_NDELAY | O_EXCL)))
     {
     	// An error have occurred opening the device.
     	perror ("Failed open the device and returned error ");
@@ -76,14 +121,14 @@ int Set_SPI_mode(int fd, unsigned char spi_mode)
     //Initialize local variable
     lResult = NO_ERROR_RET;
 
-    if(ioctl(fd, SPI_IOC_WR_MODE, &spi_mode) < NUM_0)
+    if(NUM_0 > ioctl(fd, SPI_IOC_WR_MODE, &spi_mode))
     {
     	perror ("Failed to set the write SPI mode and returned error ");
     	lResult = ERROR_RET;
         /* TODO: tracear un error */
     }
 
-    if(ioctl(fd, SPI_IOC_RD_MODE, &spi_mode) < NUM_0)
+    if(NUM_0 > ioctl(fd, SPI_IOC_RD_MODE, &spi_mode))
     {
     	perror ("Failed to set the Read SPI mode and returned error ");
     	lResult = ERROR_RET;
@@ -113,18 +158,16 @@ int Set_SPI_bits(int fd, unsigned char bits_per_word)
     //Initialize local variable
     lResult = NO_ERROR_RET;
 
-    if(ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits_per_word) < NUM_0)
+    if(NUM_0 > ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits_per_word))
     {
-    	perror ("Failed to set the No. of bits/transation in write operation"
-    			" and returned error ");
+    	perror ("Failed to set the No. of bits/transation in write operation and returned error ");
     	lResult = ERROR_RET;
         /* TODO: tracear un error */
     }
 
-    if(ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits_per_word) < NUM_0)
+    if(NUM_0 > ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits_per_word))
     {
-    	perror ("Failed to set the No. of bits/transation in read operation"
-    			" and returned error ");
+    	perror ("Failed to set the No. of bits/transation in read operation and returned error ");
     	lResult = ERROR_RET;
         /* TODO: tracear un error */
     }
@@ -152,18 +195,16 @@ int Set_SPI_speed(int fd, unsigned long bus_speed_HZ)
     //Initialize local variable
     lResult = NO_ERROR_RET;
 
-    if(ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &bus_speed_HZ) < NUM_0)
+    if(NUM_0 > ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &bus_speed_HZ))
     {
-    	perror ("Failed to set the frecuency for the write operation "
-    			"and returned error ");
+    	perror ("Failed to set the frecuency for the write operation and returned error ");
     	lResult = ERROR_RET;
         /* TODO: tracear un error */
     }
 
-    if(ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &bus_speed_HZ) < NUM_0)
+    if(NUM_0 > ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &bus_speed_HZ))
     {
-    	perror ("Failed to set the frecuency for the read operation "
-    			"and returned error ");
+    	perror ("Failed to set the frecuency for the read operation and returned error ");
     	lResult = ERROR_RET;
         /* TODO: tracear un error */
     }
@@ -220,60 +261,83 @@ int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
 	   unsigned char spi_bits_No, unsigned char mode_spi)
 {
     int lResult;
+    char lsTrace [MAX_SCRLINE + END_STRING] = {'\0'};
 
     //Initialize local variable
     lResult = NO_ERROR_RET;
 
     /* Initialize the parameters for spidev1.0 structure */
-    SPI_Config_init(spi_bytes_no, spi_bus_speed, chip_select,
-            spi_delay, spi_bits_No, mode_spi, &SPI_device0);
+    SPI_Config_init(spi_bytes_no, spi_bus_speed, chip_select, spi_delay, spi_bits_No, mode_spi,
+    		&SPI_device0);
 
     /* Assign the path to the spidev1.0 for use */
     SPI_device0.spi_dev_path =  (char *) SPIDEV1_PATH;
 
     /* Open the spidev1.0 device */
-    if(Open_device(SPI_device0.spi_dev_path, &SPI_device0.fd_spi) < NUM_0)
+    if(NUM_0 > Open_device(SPI_device0.spi_dev_path, &SPI_device0.fd_spi))
     {
-    	perror ("SPI: Failed to open spidev1.0 | ");
+    	Print_Trace(LOG_SEV_ERROR, "The thread has not been created.");
         lResult = ERROR_RET;
         /* TODO: tracear un error */
     }
 
     /* Set the SPI mode for RD and WR operations */
-    if(Set_SPI_mode(SPI_device0.fd_spi, SPI_device0.spi_mode) < NUM_0)
+    else if(NUM_0 > Set_SPI_mode(SPI_device0.fd_spi, SPI_device0.spi_mode))
     {
-    	perror ("SPI: Failed to set SPIMODE | ");
+    	Print_Trace(LOG_SEV_ERROR, "The thread has not been created.");
         lResult = ERROR_RET;
         /* TODO: tracear un error */
     }
 
     /* Set the No. of bits per transaction */
-    if(Set_SPI_bits(SPI_device0.fd_spi, SPI_device0.spi_data_bits_No) < NUM_0)
+    else if(NUM_0 > Set_SPI_bits(SPI_device0.fd_spi, SPI_device0.spi_data_bits_No))
     {
-    	perror ("SPI: Failed to set No. of bits per word | ");
+		snprintf(lsTrace, sizeof(lsTrace), "%s: SPI handler:%u, BitsxWord:%u",
+				"Error setting the No. of bits per transaction",
+				SPI_device0.fd_spi,
+				SPI_device0.spi_data_bits_No);
+    	Print_Trace(LOG_SEV_ERROR, lsTrace);
         lResult = ERROR_RET;
-        /* TODO: tracear un error */
     }
 
     /* Set the SPI bus speed in Hz */
-    if(Set_SPI_speed(SPI_device0.fd_spi, SPI_device0.spi_bus_speedHZ) < NUM_0)
+    else if(NUM_0 > Set_SPI_speed(SPI_device0.fd_spi, SPI_device0.spi_bus_speedHZ))
     {
-    	perror ("SPI: Failed to set SPI bus frequency | ");
+		snprintf(lsTrace, sizeof(lsTrace), "%s: SPI handler:%u, speedHz:%u",
+				"Error setting the SPI bus speed (Hz)",
+				SPI_device0.fd_spi,
+				SPI_device0.spi_bus_speedHZ);
+    	Print_Trace(LOG_SEV_ERROR, lsTrace);
         lResult = ERROR_RET;
-        /* TODO: tracear un error */
     }
 
     /* Initialize the spi_ioc_transfer structure that will be passed to the
     * KERNEL to define/configure each SPI Transactions*/
-    transfer_spidev0.tx_buf 	   = NUM_0;
-    transfer_spidev0.rx_buf 	   = NUM_0;
-    transfer_spidev0.pad           = NUM_0;
-    transfer_spidev0.len           = SPI_device0.spi_bytes_num;
-    transfer_spidev0.speed_hz      = SPI_device0.spi_bus_speedHZ;
-    transfer_spidev0.delay_usecs   = SPI_device0.spi_delay_us;
-    transfer_spidev0.bits_per_word = SPI_device0.spi_data_bits_No;
-    transfer_spidev0.cs_change     = SPI_device0.ss_change;
+    else
+    {
+		transfer_spidev0.tx_buf 	   = NUM_0;
+		transfer_spidev0.rx_buf 	   = NUM_0;
+		transfer_spidev0.pad           = NUM_0;
+		transfer_spidev0.len           = SPI_device0.spi_bytes_num;
+		transfer_spidev0.speed_hz      = SPI_device0.spi_bus_speedHZ;
+		transfer_spidev0.delay_usecs   = SPI_device0.spi_delay_us;
+		transfer_spidev0.bits_per_word = SPI_device0.spi_data_bits_No;
+		transfer_spidev0.cs_change     = SPI_device0.ss_change;
 
+		snprintf(lsTrace, sizeof(lsTrace), "%s: tx_buf:%llu rx_buf:%llu pad:%u length:%u speedHz:%u"
+				" delay(us):%u, BitsxWord:%u, ChipSelect:%u.",
+				"The SPI has been initialized",
+				transfer_spidev0.tx_buf,
+				transfer_spidev0.rx_buf,
+				transfer_spidev0.pad,
+				transfer_spidev0.len,
+				transfer_spidev0.speed_hz,
+				transfer_spidev0.delay_usecs,
+				transfer_spidev0.bits_per_word,
+				transfer_spidev0.cs_change);
+
+		Print_Trace(LOG_SEV_INFORMATIONAL, lsTrace);
+    }
     return lResult;
 }
 
@@ -306,12 +370,13 @@ int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
     transfer_spidev0.len = bytes_num;
 
     /* Perform a SPI Transaction */
-    if (ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(RDATAC_BYTES_NUM), &transfer_spidev0) < NUM_0)
+    if (NUM_0 > ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(bytes_num), &transfer_spidev0))
     {
         perror("SPI: SPI_IOC_MESSAGE Failed |");
         lResult = ERROR_RET;
         /* TODO: tracear un error */
     }
+
     return lResult;
 }
 
@@ -343,7 +408,7 @@ unsigned char SPIDEV1_single_transfer(unsigned char data_byte)
     transfer_spidev0.rx_buf = (unsigned long)&rec_byte;
 
     /* Perform an SPI Transaction */
-    if (ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(SPI_ONE_BYTE), &transfer_spidev0) < NUM_0)
+    if (NUM_0 > ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(NUM_1), &transfer_spidev0))
     {
         perror("SPI: SPI_IOC_MESSAGE Failed |");
         rec_byte = NEG_1;

@@ -18,6 +18,7 @@
  */
 #include <include.h>
 
+
 /*
  *------------------------------------------------------------------------------
  * TYPE DEFINITIONS
@@ -26,6 +27,7 @@
 #ifndef NULL
 #define NULL (void *)0
 #endif
+
 
 /*
  *------------------------------------------------------------------------------
@@ -56,6 +58,8 @@
 #define NUM_7                   7
 #define NUM_8                   8
 #define NUM_9                   9
+#define NUM_10					10
+#define NUM_100					100
 
 #define NEG_1				    -1
 #define NEG_2				    -2
@@ -69,20 +73,24 @@
 
 #define ADS_ID					1
 
+
 /*
  *=====================================================
  * Numeric constants
  *=====================================================
  */
 #define MAX_SCRLINE             200
-#define MAX_PATHLINE            26
+#define MAX_PATHLINE            40
 #define MAX_VERSIONLINE         16
 #define MAX_TIMELINE            16
 #define MAX_FILENAME			36
 #define MAX_FILETRACENAME    	50
 #define MAX_FILESIZE			50000
-#define SYNC_TIME				50000
 #define END_STRING				1
+
+// Latency values
+#define SYNC_TIME				50000
+
 
 /*
  *=====================================================
@@ -92,14 +100,17 @@
 #define TRACE_FILE              "%s//[%s]Tace_SANA.txt"
 #define MAX_INT                 (int)0xFFFF
 
+
 /*
  *=====================================================
  * Type bonders definitions
  *=====================================================
  */
-#define INIT_POS				0
 #define MIN_INT                 (int)0
 #define MAX_INT                 (int)0xFFFF
+
+#define INIT_POS				0
+
 
 /*
  *=====================================================
@@ -199,6 +210,14 @@
 #define CONFIG3_RESERVED	   	0x60	/* bits 6 and 7 always to 1. */
 #define CONFIG3_PD_REFBUF   	0x80	/* Enable the power-down reference buffer. */
 
+/* Wait cycles */
+#define ADS1299_4_tCLK			5
+#define ADS1299_18_tCLK			20
+
+/* Array positions */
+#define COMMAND_POS  			0
+#define ADDRESS_POS  			0
+#define TRANSFER_POS			1
 
 //Returns values
 #define ERROR_RET			-1
@@ -212,6 +231,7 @@
  */
 #define KEY_QUEUE 			5
 #define KEY_PATHNAME 		"/bin/ls"
+
 
 /*
  *=====================================================
