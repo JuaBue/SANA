@@ -1,8 +1,11 @@
 /*
- * types.h
- *
- *  Created on: 29 nov. 2017
- *      Author: juan.bueno
+ ===================================================================================================
+ Name        : types.h
+ Author      : Juan Ignacio Bueno Gallego
+ Version     : 1.0
+ Created on  : 8 February , 2018
+ Description : HEADER - Types for the SANA data acquisition program.
+ ===================================================================================================
  */
 
 #ifndef INCLUDES_TYPES_H_

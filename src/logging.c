@@ -3,8 +3,8 @@
  Name        : logging.c
  Author      : Juan Ignacio Bueno Gallego
  Version     : 1.0
- Copyright   :
- Description :
+ Created on  : 8 February , 2018
+ Description : Code related with the data and tace logging.
  ===================================================================================================
  */
 
@@ -88,13 +88,13 @@ BOOL Print_LOG (char *lDato)
     struct stat    st;
 
     /* Initialize output data */
-    lbResult     = FALSE;
+    lbResult = FALSE;
 
     /* Initialize local variable */
     stat(lsPath, &st);
 
     /* get the path to store the LOGs if there is no file to store the data or the file is full.*/
-    if (!lsPath[INIT_POS] || ((int)st.st_size >= MAX_FILESIZE))
+    if (!lsPath[INIT_POS] || (MAX_FILESIZE <= (int)st.st_size))
     {
        	Create_Path(lsPath);
     }
@@ -220,7 +220,7 @@ BOOL Print_Trace (LOG_SEV_TYPE leSevType, const char *lcTrace)
 
 	snprintf(lsTraceName, sizeof(lsTraceName), TRACE_FILE, lcNamePath, lcNamePath);
 	// Check if the file exist previously.
-	if(NEG_1 != access(lsTraceName, F_OK ))
+	if(NEG_1 != access(lsTraceName, F_OK))
 	{
 		lfFile = fopen (lsTraceName, "aw+");
 		Get_TimeStamp (TIME_YMDHMS, lcNamePath, sizeof(lcNamePath));
@@ -253,14 +253,14 @@ BOOL Print_Trace (LOG_SEV_TYPE leSevType, const char *lcTrace)
  */
 BOOL Create_Path (char *lsPath)
 {
-    BOOL   			lbResult;
-    FILE    	    *lfFile                            			= NULL;
-    static int 	    lwCount 								    = NUM_1;
-    char 		   	lcNamePath[MAX_PATHLINE + END_STRING]       = {'\0'};
-    char    		lsNameFile[MAX_FILENAME + END_STRING]       = {'\0'};
-    char    		lcVersionTime[MAX_VERSIONLINE + END_STRING] = {'\0'};
-    char    	    lsLog[MAX_SCRLINE + END_STRING]             = {'\0'};
-    char    	    lsTrace[MAX_SCRLINE + END_STRING]           = {'\0'};
+    BOOL   		  lbResult;
+    FILE    	  *lfFile                            		  = NULL;
+    static int 	  lwCount 								      = NUM_1;
+    char 		  lcNamePath[MAX_PATHLINE + END_STRING]       = {'\0'};
+    char    	  lsNameFile[MAX_FILENAME + END_STRING]       = {'\0'};
+    char    	  lcVersionTime[MAX_VERSIONLINE + END_STRING] = {'\0'};
+    char    	  lsLog[MAX_SCRLINE + END_STRING]             = {'\0'};
+    char    	  lsTrace[MAX_SCRLINE + END_STRING]           = {'\0'};
 
 
     /* Initialize output data */

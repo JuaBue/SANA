@@ -1,12 +1,13 @@
 /*
- ============================================================================
- Name        : include.h
- Author      :
- Version     :
- Copyright   :
- Description :
- ============================================================================
+ ===================================================================================================
+ Name        : logging.h
+ Author      : Juan Ignacio Bueno Gallego
+ Version     : 1.0
+ Created on  : 8 February , 2018
+ Description : HEADER for the code related with the data and tace logging.
+ ===================================================================================================
  */
+
 
 #ifndef LOGGING_H_
 #define LOGGING_H_

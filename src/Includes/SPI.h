@@ -1,9 +1,13 @@
 /*
-* SPI.h
-*
-*  Created on: 8 Feb, 2018
-*  Author: Juan Ignacio Bueno Gallego
-*/ 
+ ===================================================================================================
+ Name        : SPI.c
+ Author      : Juan Ignacio Bueno Gallego
+ Version     : 1.0
+ Created on  : 8 February , 2018
+ Description : HEADER - For the SPI Library for the BeagleBone that consists of the API's to enable
+ 	 	 	   SPI transactions.
+ ===================================================================================================
+ */
 
 #ifndef SPI_H_
 #define SPI_H_
@@ -22,7 +26,7 @@ extern void SPI_Config_init(unsigned long spi_bytes_no, unsigned long spi_bus_sp
 extern int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
                 unsigned char chip_select, unsigned short spi_delay,
                 unsigned char spi_bits_No, unsigned char mode_spi);
-extern int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
+extern int SPIDEV1_transfer(unsigned char send[], unsigned char receive[],
                 unsigned char bytes_num);
 extern unsigned char SPIDEV1_single_transfer(unsigned char data_byte);
 

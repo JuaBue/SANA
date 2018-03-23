@@ -1,11 +1,11 @@
 /*
- ============================================================================
- Name        : das1299.c
+ ===================================================================================================
+ Name        : ads1299.c
  Author      : Juan Ignacio Bueno Gallego
  Version     : 1.0
- Copyright   :
- Description :
- ============================================================================
+ Created on  : 8 February , 2018
+ Description : ADS1299 low level library to communicate with the device using SPI.
+ ===================================================================================================
  */
 
 /*
@@ -21,8 +21,8 @@
  * EXTERNAL VARIABLES
  *------------------------------------------------------------------------------
  */
-extern unsigned char Tx_spi[SPIDEV_BYTES_NUM];
-extern unsigned char RX_spi[SPIDEV_BYTES_NUM];
+extern unsigned char    Tx_spi[SPIDEV_BYTES_NUM];
+extern unsigned char    RX_spi[SPIDEV_BYTES_NUM];
 
 
 /*
@@ -171,10 +171,10 @@ BOOL Init_ads1299 (void)
  */
 BOOL SendCommad_ads1299 (unsigned char Command)
 {
-    BOOL           lbResult;
+    BOOL    lbResult;
 
     /* Initialize output data */
-    lbResult     = TRUE;
+    lbResult = TRUE;
 
     //Reset values of the transfer.
     memset(Tx_spi, NUM_0, sizeof(Tx_spi));
@@ -182,7 +182,7 @@ BOOL SendCommad_ads1299 (unsigned char Command)
 
     Tx_spi[COMMAND_POS] = Command;
 
-    if (SPIDEV1_transfer(Tx_spi, RX_spi, NO_OF_BYTES) == ERROR_RET)
+    if (ERROR_RET == SPIDEV1_transfer(Tx_spi, RX_spi, NO_OF_BYTES))
     {
         perror("ERROR to reset the ads1299.\n");
         lbResult = FALSE;
@@ -205,10 +205,10 @@ BOOL SendCommad_ads1299 (unsigned char Command)
  */
 BOOL SendByte_ads1299 (unsigned char Address, unsigned char Transfer)
 {
-    BOOL           lbResult;
+    BOOL    lbResult;
 
     /* Initialize output data */
-    lbResult     = TRUE;
+    lbResult = TRUE;
 
     //Reset values of the transfer.
     memset(Tx_spi, NUM_0, sizeof(Tx_spi));

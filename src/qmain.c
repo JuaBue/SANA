@@ -1,11 +1,11 @@
 /*
- ============================================================================
- Name        : main.c
+ ===================================================================================================
+ Name        : qmain.c
  Author      : Juan Ignacio Bueno Gallego
  Version     : 1.0
- Copyright   :
- Description :
- ============================================================================
+ Created on  : 8 February , 2018
+ Description : This is the main process of the SANA data acquisition program.
+ ===================================================================================================
  */
 
 /*
@@ -23,6 +23,7 @@
  */
 
 
+
 /*
  *------------------------------------------------------------------------------
  * TYPE DEFINITIONS
@@ -35,7 +36,6 @@
  * PRIVATE PROTOTYPES
  *------------------------------------------------------------------------------
  */
-
 
 
 /*
@@ -66,13 +66,12 @@ int main(void)
 	int                msqid; 		  /* Id queue */
 	pthread_t          idHilo; 		  /* Id thread */
 	pthread_attr_t     tAttributes;   /* Thread attributes */
-    //char               lsTrace[MAX_SCRLINE + 1]       = {'\0'};
 
-
+	// Struct to store the data to send to the queue.
 	struct msgbuf
 	{
-		long Id_Message;
-		unsigned char Data_RX_spi[RDATAC_BYTES_NUM];
+		long             Id_Message;
+		unsigned char    Data_RX_spi[RDATAC_BYTES_NUM];
 	}Set_Data;
 
     /* Initialize local variable */
@@ -89,8 +88,8 @@ int main(void)
    	Init_Trace();
 
     //SPI INITIALIZE
-    if (SPI_DEV0_init( ARRAY_SIZE(Tx_spi), SPIDEV1_BUS_SPEED_HZ, SPI_SS_LOW, SPIDEV_DELAY_US,
-    		SPIDEV_DATA_BITS_NUM, SPI_MODE1) == NEG_1)
+    if (NEG_1 == SPI_DEV0_init( ARRAY_SIZE(Tx_spi), SPIDEV1_BUS_SPEED_HZ, SPI_SS_LOW, SPIDEV_DELAY_US,
+    		SPIDEV_DATA_BITS_NUM, SPI_MODE1))
     {
        	Print_Trace(LOG_SEV_ERROR, "spidev1.0 initialization failed");
     }
@@ -98,6 +97,7 @@ int main(void)
     {
     	Print_Trace(LOG_SEV_INFORMATIONAL, "spidev1.0 initialized - READY");
     }
+
 
 #ifdef UNITTEST
    	/* This section is active only for unit test proposes. */
@@ -109,7 +109,7 @@ int main(void)
 
     //QUEUE INITIALIZE
 	keyqueue = ftok (KEY_PATHNAME, KEY_QUEUE);
-	if ((msqid = msgget(keyqueue, 0777 | IPC_CREAT)) == NEG_1)
+	if (NEG_1 == (msqid = msgget(keyqueue, 0777 | IPC_CREAT)))
 	{
 		Print_Trace(LOG_SEV_ERROR, "The queue has not been created.");
 	}
@@ -119,7 +119,7 @@ int main(void)
 	}
 
     //THREAD INITIALIZE
-	if (pthread_create(&idHilo, &tAttributes, StoreData, NULL) != NUM_0)
+	if (NUM_0 != pthread_create(&idHilo, &tAttributes, StoreData, NULL))
 	{
 		Print_Trace(LOG_SEV_ERROR, "The thread has not been created.");
 	}
@@ -131,7 +131,8 @@ int main(void)
 
 	while (NUM_1)
     {
-        if (SPIDEV1_transfer(Tx_spi, RX_spi, RDATAC_BYTES_NUM) == NUM_0)
+        if (NUM_0 == SPIDEV1_transfer((unsigned char *) &Tx_spi, (unsigned char *) &RX_spi,
+        		RDATAC_BYTES_NUM))
         {
         	// Copy the data input into the queue data structure.
             Set_Data.Id_Message = NUM_1;
@@ -149,7 +150,7 @@ int main(void)
         else
         {
         	Print_Trace(LOG_SEV_ERROR, "spidev1.0: Transaction Failed");
-        	exit(1);
+        	exit(NEG_1);
         }
 
     }
@@ -191,7 +192,7 @@ int InitSystem(void)
  */
 void *StoreData (void *parametro)
 {
-	int msqid; /* Id of the queue */
+	int     msqid; /* Id of the queue */
     char    lbuff[MAX_SCRLINE] = {'\0'};
 
 	struct msgbuf
@@ -203,7 +204,7 @@ void *StoreData (void *parametro)
     memset(&Get_Data.Data_RX_spi[INIT_POS],NUM_0,ARRAY_SIZE(Get_Data.Data_RX_spi));
 
 	//Create and join to the data queue.
-	if ((msqid = msgget(keyqueue, IPC_CREAT | 0666)) == NEG_1)
+	if (NEG_1 == (msqid = msgget(keyqueue, IPC_CREAT | 0666)))
 	{
 		Print_Trace(LOG_SEV_ERROR, "The thread has not been created.");
 	}
@@ -233,13 +234,13 @@ void *StoreData (void *parametro)
 		{
 			Print_Trace(LOG_SEV_ERROR, "The Message has not be able to logged!.");
 		}
-        usleep(SYNC_TIME * 10);
+        usleep(SYNC_TIME);
 	}
 	return NUM_0;
 	//pthread_exit ((void *) "The Thread has been closed.\n");
 }
 
-
+#ifdef UNITTEST
 /*
  * ------------------------------------------------------------------------------
  *
@@ -269,6 +270,6 @@ int UnitTest(void)
 
     return NUM_1;
 } /* end InitSystem */
-
+#endif
 
 

@@ -85,7 +85,7 @@ unsigned char    RX_spi[RDATAC_BYTES_NUM];
  */
 int Open_device(char *spi_dev_path, int *fd)
 {
-    int lResult;
+    int    lResult;
 
     //Initialize local variable
     lResult = NO_ERROR_RET;
@@ -116,7 +116,7 @@ int Open_device(char *spi_dev_path, int *fd)
  */
 int Set_SPI_mode(int fd, unsigned char spi_mode)
 {
-    int lResult;
+    int    lResult;
 
     //Initialize local variable
     lResult = NO_ERROR_RET;
@@ -153,7 +153,7 @@ int Set_SPI_mode(int fd, unsigned char spi_mode)
  */
 int Set_SPI_bits(int fd, unsigned char bits_per_word)
 {
-    int lResult;
+    int    lResult;
 
     //Initialize local variable
     lResult = NO_ERROR_RET;
@@ -190,7 +190,7 @@ int Set_SPI_bits(int fd, unsigned char bits_per_word)
  */
 int Set_SPI_speed(int fd, unsigned long bus_speed_HZ)
 {
-    int lResult;
+    int    lResult;
 
     //Initialize local variable
     lResult = NO_ERROR_RET;
@@ -260,8 +260,8 @@ int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
 	   unsigned char chip_select, unsigned short spi_delay,
 	   unsigned char spi_bits_No, unsigned char mode_spi)
 {
-    int lResult;
-    char lsTrace [MAX_SCRLINE + END_STRING] = {'\0'};
+    int     lResult;
+    //char    lsTrace [MAX_SCRLINE + END_STRING] = {'\0'};
 
     //Initialize local variable
     lResult = NO_ERROR_RET;
@@ -276,7 +276,7 @@ int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
     /* Open the spidev1.0 device */
     if(NUM_0 > Open_device(SPI_device0.spi_dev_path, &SPI_device0.fd_spi))
     {
-    	Print_Trace(LOG_SEV_ERROR, "The thread has not been created.");
+    	perror ("SPI: Failed to open spidev1.0 | ");
         lResult = ERROR_RET;
         /* TODO: tracear un error */
     }
@@ -284,7 +284,7 @@ int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
     /* Set the SPI mode for RD and WR operations */
     else if(NUM_0 > Set_SPI_mode(SPI_device0.fd_spi, SPI_device0.spi_mode))
     {
-    	Print_Trace(LOG_SEV_ERROR, "The thread has not been created.");
+    	perror ("SPI: Failed to set SPIMODE | ");
         lResult = ERROR_RET;
         /* TODO: tracear un error */
     }
@@ -292,22 +292,14 @@ int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
     /* Set the No. of bits per transaction */
     else if(NUM_0 > Set_SPI_bits(SPI_device0.fd_spi, SPI_device0.spi_data_bits_No))
     {
-		snprintf(lsTrace, sizeof(lsTrace), "%s: SPI handler:%u, BitsxWord:%u",
-				"Error setting the No. of bits per transaction",
-				SPI_device0.fd_spi,
-				SPI_device0.spi_data_bits_No);
-    	Print_Trace(LOG_SEV_ERROR, lsTrace);
+    	perror ("SPI: Failed to set No. of bits per word | ");
         lResult = ERROR_RET;
     }
 
     /* Set the SPI bus speed in Hz */
     else if(NUM_0 > Set_SPI_speed(SPI_device0.fd_spi, SPI_device0.spi_bus_speedHZ))
     {
-		snprintf(lsTrace, sizeof(lsTrace), "%s: SPI handler:%u, speedHz:%u",
-				"Error setting the SPI bus speed (Hz)",
-				SPI_device0.fd_spi,
-				SPI_device0.spi_bus_speedHZ);
-    	Print_Trace(LOG_SEV_ERROR, lsTrace);
+    	perror ("SPI: Failed to set SPI bus frequency | ");
         lResult = ERROR_RET;
     }
 
@@ -324,19 +316,19 @@ int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
 		transfer_spidev0.bits_per_word = SPI_device0.spi_data_bits_No;
 		transfer_spidev0.cs_change     = SPI_device0.ss_change;
 
-		snprintf(lsTrace, sizeof(lsTrace), "%s: tx_buf:%llu rx_buf:%llu pad:%u length:%u speedHz:%u"
-				" delay(us):%u, BitsxWord:%u, ChipSelect:%u.",
-				"The SPI has been initialized",
-				transfer_spidev0.tx_buf,
-				transfer_spidev0.rx_buf,
-				transfer_spidev0.pad,
-				transfer_spidev0.len,
-				transfer_spidev0.speed_hz,
-				transfer_spidev0.delay_usecs,
-				transfer_spidev0.bits_per_word,
-				transfer_spidev0.cs_change);
-
-		Print_Trace(LOG_SEV_INFORMATIONAL, lsTrace);
+//		snprintf(lsTrace, sizeof(lsTrace), "%s: tx_buf:%llu rx_buf:%llu pad:%u length:%u speedHz:%u"
+//				" delay(us):%u, BitsxWord:%u, ChipSelect:%u.",
+//				"The SPI has been initialized",
+//				transfer_spidev0.tx_buf,
+//				transfer_spidev0.rx_buf,
+//				transfer_spidev0.pad,
+//				transfer_spidev0.len,
+//				transfer_spidev0.speed_hz,
+//				transfer_spidev0.delay_usecs,
+//				transfer_spidev0.bits_per_word,
+//				transfer_spidev0.cs_change);
+//
+//		Print_Trace(LOG_SEV_INFORMATIONAL, "The SPI has been initialized");
     }
     return lResult;
 }
@@ -354,10 +346,10 @@ int SPI_DEV0_init(unsigned long spi_bytes_no, unsigned long spi_bus_speed,
  *  NO_ERROR_RET on success, ERROR_RET on failure.
  * -----------------------------------------------------------------------------
  */
-int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
+int SPIDEV1_transfer(unsigned char send[], unsigned char receive[],
         unsigned char bytes_num)
 {
-    int lResult;
+    int    lResult;
 
     //Initialize local variable
     lResult = NO_ERROR_RET;
@@ -367,14 +359,13 @@ int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
     transfer_spidev0.rx_buf = (unsigned long)receive;
 
     /* Override No. of bytes per transaction */
-    transfer_spidev0.len = bytes_num;
+    transfer_spidev0.len = ARRAY_SIZE(send); //bytes_num;
 
     /* Perform a SPI Transaction */
     if (NUM_0 > ioctl(SPI_device0.fd_spi, SPI_IOC_MESSAGE(bytes_num), &transfer_spidev0))
     {
         perror("SPI: SPI_IOC_MESSAGE Failed |");
         lResult = ERROR_RET;
-        /* TODO: tracear un error */
     }
 
     return lResult;
@@ -395,7 +386,7 @@ int SPIDEV1_transfer(unsigned char *send, unsigned char *receive,
  */
 unsigned char SPIDEV1_single_transfer(unsigned char data_byte)
 {
-    unsigned char rec_byte;
+    unsigned char    rec_byte;
 
     //Initialize local variable
     rec_byte = NUM_0;

@@ -1,11 +1,11 @@
 /*
- ============================================================================
+ ===================================================================================================
  Name        : constants.h
- Author      :
- Version     :
- Copyright   :
- Description :
- ============================================================================
+ Author      : Juan Ignacio Bueno Gallego
+ Version     : 1.0
+ Created on  : 8 February , 2018
+ Description : HEADER - Constants for the SANA data acquisition program.
+ ===================================================================================================
  */
 
 #ifndef INCLUDES_CONSTANTS_H_
@@ -41,6 +41,7 @@
  *=====================================================
  */
 #define UNITTEST				1
+#define SPICHECK				1
 
 
 /*
